@@ -1,0 +1,33 @@
+{
+  "name": "cir-amazon-fulfillment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kavyasukumar/cir-amazon-fulfillment.git",
+  "author": "Kavya Sukumar <kavya.sukumar@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "@mapbox/mapbox-gl-sync-move": "^0.3.0",
+    "core-js": "^2.5.7",
+    "custom-event-polyfill": "^1.0.6",
+    "mapbox-gl": "^1.1.0",
+    "mapbox-gl-compare": "^0.2.0",
+    "normalize-css": "^2.3.1",
+    "url-search-params-polyfill": "^5.0.0",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
+    "file-loader": "^1.1.11",
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
