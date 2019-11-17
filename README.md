@@ -26,6 +26,8 @@ Run
 bundle exec foreman start
 ```
 
+Open http://localhost:4567 
+
 ### Building a static version of the project
 ```sh
 bundle exec middleman build
