@@ -1,10 +1,11 @@
 # Activate and configure extensions
 # https://middlemanapp.com/advanced/configuration/#configuring-extensions
 
-activate :autoprefixer do |prefix|
-  prefix.browsers = "last 2 versions"
-end
+# activate :autoprefixer do |prefix|
+#   prefix.browsers = "last 2 versions"
+# end
 
+# activate :google_drive, load_sheets: '1GjVjJ-ilYk1TNO9s3bgJzh90ixPQB7KI8QG4dPDEAmM'
 # Layouts
 # https://middlemanapp.com/basics/layouts/
 

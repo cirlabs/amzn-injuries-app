@@ -1,5 +1,6 @@
 import '@babel/polyfill'
 import 'normalize-css/normalize.css'
+import 'core-js'
 
 import fontLoader from 'font'
 import map from 'map'

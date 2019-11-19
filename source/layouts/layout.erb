@@ -5,12 +5,16 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Use the title from a page's frontmatter if it has one -->
-    <title><%= current_page.data.title || "Middleman" %></title>
-    <%= stylesheet_link_tag "site" %>
-    <%= javascript_include_tag "site" %>
+    <title>Amazon fulfillment centers</title>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.1/mapbox-gl.js'></script>
+    <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css' rel='stylesheet' />
+    <%= stylesheet_link_tag "custom" %>
+    <% if page_classes == 'index' %>
+      <%= javascript_include_tag page_classes %>
+    <%end%>
   </head>
-  <body>
+  <body class="<%=page_classes%>">
     <%= yield %>
   </body>
 </html>
