@@ -5,18 +5,22 @@ const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDz
 
 // TODO: replace with new one
 const STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus'
+const WAREHOUSE_LAYER = 'warehouses'
 
 mapboxgl.accessToken = TOKEN
 
 _map.init = () => {
+  const bounds = new mapboxgl.LngLatBounds([
+    [-122.8, 25], [-69.5, 48.8]
+  ])
   const map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
     maxZoom: 15,
+    bounds: bounds,
     fitBoundsOptions: { padding: 20 }
   })
   _map.map = map
-    // map.setBounds({ '_sw': {"lng":-126.34948837523882,"lat":23.653877779353053},"_ne":{"lng":-70.1761206403349,"lat":51.49357860804878}})
 
   return new Promise((resolve, reject) => {
     map.on('load', () => {
@@ -25,7 +29,7 @@ _map.init = () => {
         'data': INCIDENTS
       })
       map.addLayer({
-        'id': 'warehouses',
+        'id': WAREHOUSE_LAYER,
         'type': 'circle',
         'source': 'incidents',
         'paint': {
@@ -37,8 +41,37 @@ _map.init = () => {
       document.getElementById('map').classList.remove('invisible')
       // document.getElementById('legend').classList.remove('invisible')
       map.setMaxBounds(map.getBounds())
+      setPopups(map)
       resolve(map)
     })
+  })
+}
+
+const setPopups = (map) => {
+  const popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: true
+  })
+  map.on('mouseenter', WAREHOUSE_LAYER, function (e) {
+    // Change the cursor style as a UI indicator.
+    map.getCanvas().style.cursor = 'pointer'
+
+    let feature = e.features[0].properties
+    console.log(e.features.length)
+
+    let location = feature.city + ', ' + feature.state
+    let dart = feature.dart + '(' + feature.diffDart + 'times the industry average)'
+
+    // Populate the popup and set its coordinates
+    // based on the feature found.
+    popup.setLngLat(e.lngLat)
+      .setHTML('<h3>' + location + '</h3><p>' + dart + '</p>')
+      .addTo(map)
+  })
+
+  map.on('mouseleave', WAREHOUSE_LAYER, function () {
+    map.getCanvas().style.cursor = ''
+    popup.remove()
   })
 }
 
