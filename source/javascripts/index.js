@@ -10088,7 +10088,7 @@ __webpack_require__.r(__webpack_exports__);
 var _map = {};
 var TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'; // TODO: replace with new one
 
-var STYLE = 'mapbox://styles/cir/ck36a5s6f1i111cmld9cfnvll';
+var STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus';
 mapboxgl.accessToken = TOKEN;
 
 _map.init = function () {
