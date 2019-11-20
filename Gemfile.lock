@@ -137,6 +137,7 @@ PLATFORMS
 
 DEPENDENCIES
   foreman
+  json
   middleman!
   middleman-core!
   middleman-sprockets!
