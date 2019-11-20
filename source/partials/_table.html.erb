@@ -1,0 +1,45 @@
+<section id="tableHolder">
+  <div id='table'>
+    <table>
+      <thead>
+        <tr>
+          <td>Facility</td>
+          <td>Robots</td>
+          <td>City</td>
+          <td>State</td>
+          <td>Zip Code</td>
+        
+          <td>Number of Injuries for 2018</td>
+          <td>Number of Serious Injuries for 2018</td>
+          <td>Total Injury Rate for 2018</td>
+          <td>(Injury Rate)(5.2, Industry Injury Rate)</td>
+          <td>Serious Injury Rate for 2018</td>
+          <td>(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)</td>
+          <td>Source(s) for Locations</td>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.amazon.keys.each do |key| %>
+          <tr>
+            <td><%= key %>
+            <td><%= data.amazon[key]["Robots"] %></td>
+            <td><%= data.amazon[key]["City"] %></td>
+            <td><%= data.amazon[key]["State"] %></td>
+            <td><%= data.amazon[key]["Zip Code"] %></td>
+            <td><%= data.amazon[key]["Number of Injuries for 2018"] %></td>
+            <td><%= data.amazon[key]["Number of Serious Injuries for 2018"] %></td>
+            
+            <td><%= data.amazon[key]["Total Injury Rate for 2018"] %></td>
+            <td><%= data.amazon[key]["(Injury Rate)(5.2, Industry Injury Rate)"] %></td>
+            <td><%= data.amazon[key]["Serious Injury Rate for 2018<"] %></td>
+            <td><%= data.amazon[key]["(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)"] %></td>
+            <td><%= data.amazon[key]["Source(s) for Locations"] %></td>
+          </tr>
+        <% end %>
+        
+      </tbody>
+    </table>
+    look here
+   
+  </div>
+</section>
