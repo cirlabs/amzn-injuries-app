@@ -33,9 +33,7 @@ page '/*.txt', layout: false
 # https://middlemanapp.com/basics/helper-methods/
 
 # helpers do
-#   def some_helper
-#     'Helping'
-#   end
+#
 # end
 
 # Build-specific configuration
