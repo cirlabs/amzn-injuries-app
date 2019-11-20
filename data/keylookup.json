@@ -1,0 +1,15 @@
+{
+  robots: "Robots",
+  city: "City",
+  state: "State",
+  zip: "Zip Code",
+  lat: "Latitude",
+  lng: "Longitude",
+  injuryCount: "Number of Injuries for 2018",
+  seriousCount: "Number of Serious Injuries for 2018",
+  trir: "Total Injury Rate for 2018",
+  diffTrir: "(Injury Rate)(5.2, Industry Injury Rate)",
+  dart: "Serious Injury Rate for 2018",
+  diffDart: "(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)",
+  source: "Source(s) for Locations"
+}
