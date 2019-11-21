@@ -15,6 +15,89 @@ body {
   overflow-x: hidden;
 }
 
+h3 {
+  font-family: lato, Helvetica, sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+  line-height: 1.5em;
+}
+
+#table {
+  margin: 50px auto;
+  padding: 0 50px;
+  max-width: 960px;
+}
+
+table {
+  font-size: 14px;
+  border-collapse: collapse;
+	width: 100%;  
+}
+
+td, th { 
+	padding: 4px; 
+	border: none;
+	overflow: hidden;
+	text-align: left;
+	vertical-align: middle;
+}
+
+tr:hover{
+  background-color: #f8f8f5;
+  cursor: pointer;
+
+  .state-bar {
+    background-color: #888;
+  }
+}
+
+
+th {  
+  font-weight: 400;
+  cursor: pointer;
+  background: url(../images/arrow-sorters.svg) 6px center no-repeat;
+  border-bottom: 2px solid #eee;
+  background-size: 13px 13px;
+  padding: 5px 5px 5px 22px;
+  width: 11em;
+  background-color: #fff;
+}
+
+th:hover {
+  background-color: #eee;
+}
+
+th[data-sort-method='none']{
+  background-image: none;
+  padding-left:4px;
+}
+
+th[aria-sort=ascending] {
+  background: url(../images/arrow-sorter-asc.svg) 6px center no-repeat;
+  background-size: 7px 7px;
+}
+
+th[aria-sort=descending] {
+  background: url(../images/arrow-sorter-desc.svg) 6px center no-repeat;
+  background-size: 7px 7px;
+}
+
+.state-bar{
+  float: left;
+  background-color: #cecece;
+  display: block;
+  height: 100%;
+  width: 0px;
+}
+
+.state-bar span {
+  padding-left: 5px;
+}
+
+th.facility{
+  max-width: 6em;
+}
+
 #graphic {
   position: relative;
   display: flex;

@@ -1,0 +1,49 @@
+<section id="tableHolder">
+  <div id="table">
+    <table id="table-sortable" class="sort">
+      <thead>
+        <tr>
+          <th class="facility">Facility</th>
+          <th>Address</th>
+          <th>Total Injury Rate for 2018</th>
+          <th>Number of Serious Injuries for 2018</th>
+          <th data-sort-method='none'>Source(s) for Locations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.amazon.keys.each do |key| %>
+          <% f = data.amazon[key] %>
+          <tr>
+            <td><%= key %></td>
+            <td><%= f["City"] %>, <%= f["State"] %>, <%= f["Zip Code"] %></td>
+
+            <% dart = f["Total Injury Rate for 2018"] %>
+            <% roundedDart = dart.to_f.round(2) %>
+            <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
+            <td data-sort="<%= normalisedDart %>">
+              <span class="state-bar" style="width: calc(<%= normalisedDart %>/100 * 200%);">
+                <span><%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %></span>
+              </span>
+            </td>
+
+            <% seriousCount = f["Number of Serious Injuries for 2018"] %>
+            <% roundedSeriousCount = seriousCount.to_i %>
+            <% normalisedCountValue = seriousCount == "UNKNOWN" ? "0" : roundedSeriousCount %>
+            <td data-sort="<%= normalisedCountValue %>" >
+              <span class="state-bar" style="width: calc(<%= normalisedCountValue %>/500 * 100%);">  
+                <span><%= seriousCount == "UNKNOWN" ? "Unavailable" : roundedSeriousCount %></span>
+              </span>  
+            </td>
+
+            <td data-sort-method='none'><%= f["Source(s) for Locations"] %></td>
+          </tr>
+        <% end %>
+        
+      </tbody>
+    </table>
+    <div id="contact-worker"><p>Did you work in this facility? Contact example@revealnews.org
+    to learn how you can request information</p></div>
+    <div id="contact"><p>Are we missing this facility? Contact example@revealnews.org to let us know.</p></div>
+   
+  </div>
+</section>

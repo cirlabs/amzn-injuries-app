@@ -18,6 +18,7 @@
     "mapbox-gl": "^1.1.0",
     "mapbox-gl-compare": "^0.2.0",
     "normalize-css": "^2.3.1",
+    "tablesort": "^5.1.0",
     "url-search-params-polyfill": "^5.0.0",
     "whatwg-fetch": "^3.0.0"
   },
