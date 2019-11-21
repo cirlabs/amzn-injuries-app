@@ -60,7 +60,7 @@ const setPopups = (map) => {
     console.log(e.features.length)
 
     let location = feature.city + ', ' + feature.state
-    let dart = feature.dart + '(' + feature.diffDart + 'times the industry average)'
+    let dart = feature.dart + ' (' + toPrecision(feature.diffDart) + ' times the industry average)'
 
     // Populate the popup and set its coordinates
     // based on the feature found.
@@ -75,4 +75,7 @@ const setPopups = (map) => {
   })
 }
 
+const toPrecision = function (num) {
+  return Math.round(num * 100) / 100
+}
 export default _map

@@ -10054,7 +10054,6 @@ __webpack_require__.r(__webpack_exports__);
   var wireEvents = function wireEvents() {};
 
   document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOMContentLoaded');
     app.pymChild = new pym.Child();
     font__WEBPACK_IMPORTED_MODULE_150__["default"].loadFonts();
     app.height = window.innerHeight;
@@ -10141,7 +10140,7 @@ var setPopups = function setPopups(map) {
     var feature = e.features[0].properties;
     console.log(e.features.length);
     var location = feature.city + ', ' + feature.state;
-    var dart = feature.dart + '(' + feature.diffDart + 'times the industry average)'; // Populate the popup and set its coordinates
+    var dart = feature.dart + ' (' + toPrecision(feature.diffDart) + ' times the industry average)'; // Populate the popup and set its coordinates
     // based on the feature found.
 
     popup.setLngLat(e.lngLat).setHTML('<h3>' + location + '</h3><p>' + dart + '</p>').addTo(map);
@@ -10150,6 +10149,10 @@ var setPopups = function setPopups(map) {
     map.getCanvas().style.cursor = '';
     popup.remove();
   });
+};
+
+var toPrecision = function toPrecision(num) {
+  return Math.round(num * 100) / 100;
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);
