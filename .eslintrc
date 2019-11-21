@@ -6,7 +6,8 @@
   "globals": {
     "pym": true,
     "mapboxgl": true,
-    "INCIDENTS": true
+    "INCIDENTS": true,
+    "META": true
   },
   "rules": {
     "semi": 2,

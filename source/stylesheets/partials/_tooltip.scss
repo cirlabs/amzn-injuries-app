@@ -2,4 +2,46 @@
   p {
     margin: 0.25em 0;
   }
+
+  em.compare {
+    color: $black;
+  }
+
+  div.comparer-chart {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    margin: 12px 0;
+
+    p {
+      margin: 0 5px;
+      line-height: 10px;
+      font-size: 10px;
+    }
+
+    span {
+      flex-grow: 1;
+      height: 10px;
+      border: 1px solid $white;
+      border-right-width: 0;
+
+      &:last-of-type {
+        border-right-width: 1;
+      }
+
+      &.curr-step::before {
+        content: '▼';
+        position: absolute;
+        top: -15px;
+        color: inherit;
+      }
+
+      &.ind-avg-step::after {
+        content: '▲';
+        position: absolute;
+        bottom: -15px;
+        color: $grey;
+      }
+    }
+  }
 }

@@ -10090,6 +10090,7 @@ var TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3
 
 var STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus';
 var WAREHOUSE_LAYER = 'warehouses';
+var STEP_COUNT = 10;
 mapboxgl.accessToken = TOKEN;
 
 _map.init = function () {
@@ -10141,11 +10142,10 @@ var setPopups = function setPopups(map) {
     // based on the feature found.
 
     popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
-  });
-  map.on('mouseleave', WAREHOUSE_LAYER, function () {
-    map.getCanvas().style.cursor = '';
-    popup.remove();
-  });
+  }); // map.on('mouseleave', WAREHOUSE_LAYER, function () {
+  //   map.getCanvas().style.cursor = ''
+  //   popup.remove()
+  // })
 };
 
 var toPrecision = function toPrecision(num) {
@@ -10157,7 +10157,49 @@ var toPrecision = function toPrecision(num) {
 };
 
 var tooltipBody = function tooltipBody(feature) {
-  return '<div class="tooltip-body">' + '<p><b>Facility</b>: ' + feature.id + '</p>' + '<p><b>City</b>: ' + feature.city + ', ' + feature.state + '</p>' + '<p><b>DART</b>: ' + toPrecision(feature.dart) + '</p>' + '<p><b>Injuries</b>: ' + feature.injuryCount + '</p>' + '<p><b>Robots used</b>: ' + feature.robots + '</p></div>';
+  return '<div class="tooltip-body">' + '<p><b>Facility</b>: ' + feature.id + '</p>' + '<p><b>City</b>: ' + feature.city + ', ' + feature.state + '</p>' + '<p><b>All reported injuries</b>: ' + feature.injuryCount + '</p>' + '<p><b>Serious injuries</b>: ' + feature.seriousCount + '</p>' + '<p><b>DART</b>(▼): ' + toPrecision(feature.dart) + '</p>' + compareChart(toPrecision(feature.dart), META.dart) + '<p><em class="compare">It is ' + toPrecision(feature.diffDart) + ' times the industry average(▲) ' + toPrecision(META.dart.industry_avg) + '</em></p>' + '<p><b>TRIR</b>(▼): ' + toPrecision(feature.trir) + '</p>' + compareChart(toPrecision(feature.trir), META.trir) + '<p><em class="compare">It is ' + toPrecision(feature.diffTrir) + ' times the industry average(▲) ' + toPrecision(META.trir.industry_avg) + '</em></p>' + '<p><b>Robots used</b>: ' + feature.robots + '</p></div>';
+};
+
+var compareChart = function compareChart(curr, baseline) {
+  if (typeof curr === 'string') {
+    return '';
+  }
+
+  var stepSize = baseline.max / STEP_COUNT;
+  var currStep = Math.floor(curr / stepSize);
+  var indAvgStep = Math.floor(baseline.industry_avg / stepSize);
+  var outerDiv = document.createElement('div');
+  outerDiv.classList.add('comparer-chart');
+  var label = document.createElement('p');
+  label.innerText = 0;
+  outerDiv.appendChild(label);
+
+  for (var i = 0; i < STEP_COUNT; i++) {
+    var span = document.createElement('span');
+
+    if (i <= currStep) {
+      span.classList.add('bg-cat-' + currStep);
+    } else {
+      span.classList.add('bg-default');
+    }
+
+    if (currStep === i) {
+      span.classList.add('curr-step');
+      span.dataset['curr'] = curr;
+    }
+
+    if (i === indAvgStep) {
+      span.classList.add('ind-avg-step');
+      span.classList.add('fg-cat-' + currStep);
+    }
+
+    outerDiv.appendChild(span);
+  }
+
+  label = document.createElement('p');
+  label.innerText = baseline.max;
+  outerDiv.appendChild(label);
+  return outerDiv.outerHTML;
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);
