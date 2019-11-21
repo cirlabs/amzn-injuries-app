@@ -10013,6 +10013,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var map__WEBPACK_IMPORTED_MODULE_151__ = __webpack_require__(/*! map */ "./src/map.js");
 /* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152__ = __webpack_require__(/*! Tablesort */ "./node_modules/Tablesort/src/tablesort.js");
 /* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152___default = /*#__PURE__*/__webpack_require__.n(Tablesort__WEBPACK_IMPORTED_MODULE_152__);
+/* harmony import */ var tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! tablesort.number.js */ "./src/tablesort.number.js");
+
 
 
 
@@ -10333,7 +10335,9 @@ __webpack_require__.r(__webpack_exports__);
       app.pymChild.sendHeight();
     });
     var table = document.getElementById('table-sortable');
-    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table); // refresh sorting, once searched
+    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table); // This should be a shim, or wrapped as a module
+
+    tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // refresh sorting, once searched
     // sort.refresh();
 
     app.pymChild.sendHeight();
@@ -10425,6 +10429,44 @@ var setPopups = function setPopups(map) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);
+
+/***/ }),
+
+/***/ "./src/tablesort.number.js":
+/*!*********************************!*\
+  !*** ./src/tablesort.number.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var _number = {};
+
+_number.shim = function (tablesort) {
+  var cleanNumber = function cleanNumber(i) {
+    return i.replace(/[^\-?0-9.]/g, '');
+  },
+      compareNumber = function compareNumber(a, b) {
+    a = parseFloat(a);
+    b = parseFloat(b);
+    a = isNaN(a) ? 0 : a;
+    b = isNaN(b) ? 0 : b;
+    return a - b;
+  };
+
+  tablesort.extend('number', function (item) {
+    return item.match(/^[-+]?[£\x24Û¢´€]?\d+\s*([,\.]\d{0,2})/) || // Prefixed currency
+    item.match(/^[-+]?\d+\s*([,\.]\d{0,2})?[£\x24Û¢´€]/) || // Suffixed currency
+    item.match(/^[-+]?(\d)*-?([,\.]){0,1}-?(\d)+([E,e][\-+][\d]+)?%?$/); // Number
+  }, function (a, b) {
+    a = cleanNumber(a);
+    b = cleanNumber(b);
+    return compareNumber(b, a);
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (_number);
 
 /***/ })
 
