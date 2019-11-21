@@ -1,7 +1,7 @@
 
 const _map = {}
 const AMAZON_ORANGE = '#f38d20'
-const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'
+const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5'
 
 // TODO: replace with new one
 const STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus'
