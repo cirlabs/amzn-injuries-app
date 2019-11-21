@@ -4,6 +4,8 @@ import 'core-js'
 
 import fontLoader from 'font'
 import map from 'map'
+import tablesort from 'Tablesort'
+
 
 (function () {
   let app = {}
@@ -23,7 +25,15 @@ import map from 'map'
         wireEvents()
         app.pymChild.sendHeight()
       })
+    
+    var table =  document.getElementById('table-sortable');
+    var sort = new tablesort(table);
+    
+    // refresh sorting, once searched
+    // sort.refresh();
+
     app.pymChild.sendHeight()
+   
   })
 
   // TODO: implement this

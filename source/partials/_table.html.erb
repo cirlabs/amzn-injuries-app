@@ -1,45 +1,47 @@
 <section id="tableHolder">
-  <div id='table'>
-    <table>
+  <div id="table">
+    <table id="table-sortable" class="sort">
       <thead>
         <tr>
-          <td>Facility</td>
-          <td>Robots</td>
-          <td>City</td>
-          <td>State</td>
-          <td>Zip Code</td>
-        
-          <td>Number of Injuries for 2018</td>
-          <td>Number of Serious Injuries for 2018</td>
-          <td>Total Injury Rate for 2018</td>
-          <td>(Injury Rate)(5.2, Industry Injury Rate)</td>
-          <td>Serious Injury Rate for 2018</td>
-          <td>(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)</td>
-          <td>Source(s) for Locations</td>
+          <th>Facility</th>
+          <th>Address</th>
+          <th>Total Injury Rate for 2018</th>
+          <th>Number of Serious Injuries for 2018</th>
+          <th data-sort-method='none'>Source(s) for Locations</th>
         </tr>
       </thead>
       <tbody>
         <% data.amazon.keys.each do |key| %>
+          <% f = data.amazon[key] %>
           <tr>
-            <td><%= key %>
-            <td><%= data.amazon[key]["Robots"] %></td>
-            <td><%= data.amazon[key]["City"] %></td>
-            <td><%= data.amazon[key]["State"] %></td>
-            <td><%= data.amazon[key]["Zip Code"] %></td>
-            <td><%= data.amazon[key]["Number of Injuries for 2018"] %></td>
-            <td><%= data.amazon[key]["Number of Serious Injuries for 2018"] %></td>
-            
-            <td><%= data.amazon[key]["Total Injury Rate for 2018"] %></td>
-            <td><%= data.amazon[key]["(Injury Rate)(5.2, Industry Injury Rate)"] %></td>
-            <td><%= data.amazon[key]["Serious Injury Rate for 2018<"] %></td>
-            <td><%= data.amazon[key]["(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)"] %></td>
-            <td><%= data.amazon[key]["Source(s) for Locations"] %></td>
+            <td><%= key %></td>
+            <td><%= f["City"] %>, <%= f["State"] %>, <%= f["Zip Code"] %></td>
+
+            <% dart = f["Total Injury Rate for 2018"] %>
+            <% roundedDart = dart.to_f.round(2) %>
+            <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
+            <td data-sort="<%= normalisedDart %>">
+              <%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %>
+              <div class="state-bar"></div>
+            </td>
+
+            <% seriousCount = f["Number of Serious Injuries for 2018"] %>
+            <% roundedSeriousCount = seriousCount.to_f.round(2) %>
+            <% normalisedCountValue = seriousCount == "UNKNOWN" ? "0" : roundedSeriousCount %>
+            <td data-sort="<%= normalisedCountValue %>" >
+              <%= seriousCount == "UNKNOWN" ? "Unavailable" : roundedSeriousCount %>
+              <div class="state-bar"></div>  
+            </td>
+
+            <td data-sort-method='none'><%= f["Source(s) for Locations"] %></td>
           </tr>
         <% end %>
         
       </tbody>
     </table>
-    look here
+    <div id="contact-worker"><p>Did you work in this facility? Contact example@revealnews.org
+    to learn how you can request information</p></div>
+    <div id="contact"><p>Are we missing this facility? Contact example@revealnews.org to let us know.</p></div>
    
   </div>
 </section>
