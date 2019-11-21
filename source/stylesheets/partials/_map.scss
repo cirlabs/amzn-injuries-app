@@ -1,0 +1,62 @@
+@import './tooltip';
+
+#map {
+  display: flex;
+  height: 100%;
+}
+
+.hide {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+#source {
+  margin-top: 4px;
+  font-size: 14px;
+  position: relative;
+  top: -45px;
+}
+
+@media screen and (min-width: 700px) {
+  #graphic {
+    height: 56vw;
+  }
+}
+
+@media screen and (max-width: 700px) and (min-width: 641px) {
+  #graphic {
+    height: 64vw;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  #graphic {
+    display: block;
+    max-height: none;
+
+    #mapHolder {
+      height: 480px;
+      max-height: 50vh;
+
+      #map {
+        display: block;
+        margin: 8px;
+        background-color: $white;
+      }
+    }
+
+    #legend {
+      #showAll {
+        line-height: 1em;
+        margin: 8px 0;
+      }
+
+      .legend__item {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

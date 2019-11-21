@@ -11,9 +11,8 @@ import map from 'map'
   const wireEvents = () => {}
 
   document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOMContentLoaded')
     app.pymChild = new pym.Child()
-    fontLoader.loadFonts()
+    fontLoader.loadFonts() 
     app.height = window.innerHeight
     app.width = window.innerWidth
 
