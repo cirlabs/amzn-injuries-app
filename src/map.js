@@ -57,15 +57,11 @@ const setPopups = (map) => {
     map.getCanvas().style.cursor = 'pointer'
 
     let feature = e.features[0].properties
-    console.log(e.features.length)
-
-    let location = feature.city + ', ' + feature.state
-    let dart = feature.dart + ' (' + toPrecision(feature.diffDart) + ' times the industry average)'
 
     // Populate the popup and set its coordinates
     // based on the feature found.
     popup.setLngLat(e.lngLat)
-      .setHTML('<h3>' + location + '</h3><p>' + dart + '</p>')
+      .setHTML(tooltipBody(feature))
       .addTo(map)
   })
 
@@ -76,6 +72,18 @@ const setPopups = (map) => {
 }
 
 const toPrecision = function (num) {
+  if (typeof num === 'string') {
+    return num
+  }
   return Math.round(num * 100) / 100
+}
+
+const tooltipBody = function (feature) {
+  return '<div class="tooltip-body">' +
+  '<p><b>Facility</b>: ' + feature.id + '</p>' +
+  '<p><b>City</b>: ' + feature.city + ', ' + feature.state + '</p>' +
+  '<p><b>DART</b>: ' + toPrecision(feature.dart) + '</p>' +
+  '<p><b>Injuries</b>: ' + feature.injuryCount + '</p>' +
+  '<p><b>Robots used</b>: ' + feature.robots + '</p></div>'
 }
 export default _map

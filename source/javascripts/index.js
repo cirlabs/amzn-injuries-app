@@ -10137,13 +10137,10 @@ var setPopups = function setPopups(map) {
   map.on('mouseenter', WAREHOUSE_LAYER, function (e) {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer';
-    var feature = e.features[0].properties;
-    console.log(e.features.length);
-    var location = feature.city + ', ' + feature.state;
-    var dart = feature.dart + ' (' + toPrecision(feature.diffDart) + ' times the industry average)'; // Populate the popup and set its coordinates
+    var feature = e.features[0].properties; // Populate the popup and set its coordinates
     // based on the feature found.
 
-    popup.setLngLat(e.lngLat).setHTML('<h3>' + location + '</h3><p>' + dart + '</p>').addTo(map);
+    popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
   });
   map.on('mouseleave', WAREHOUSE_LAYER, function () {
     map.getCanvas().style.cursor = '';
@@ -10152,7 +10149,15 @@ var setPopups = function setPopups(map) {
 };
 
 var toPrecision = function toPrecision(num) {
+  if (typeof num === 'string') {
+    return num;
+  }
+
   return Math.round(num * 100) / 100;
+};
+
+var tooltipBody = function tooltipBody(feature) {
+  return '<div class="tooltip-body">' + '<p><b>Facility</b>: ' + feature.id + '</p>' + '<p><b>City</b>: ' + feature.city + ', ' + feature.state + '</p>' + '<p><b>DART</b>: ' + toPrecision(feature.dart) + '</p>' + '<p><b>Injuries</b>: ' + feature.injuryCount + '</p>' + '<p><b>Robots used</b>: ' + feature.robots + '</p></div>';
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);

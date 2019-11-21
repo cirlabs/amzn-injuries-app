@@ -12,7 +12,7 @@ import map from 'map'
 
   document.addEventListener('DOMContentLoaded', function () {
     app.pymChild = new pym.Child()
-    fontLoader.loadFonts()
+    fontLoader.loadFonts() 
     app.height = window.innerHeight
     app.width = window.innerWidth
 
