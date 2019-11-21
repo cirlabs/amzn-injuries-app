@@ -1,4 +1,102 @@
 $black: #111;
 $white: #fff;
+$grey: #ccc;
 $reveal-orange: #f38d20;
 $amazon-organe: #f90;
+
+$cat-1: #00429d;
+$cat-2: #3c66ae;
+$cat-3: #5f8bbe;
+$cat-4: #82b2cf;
+$cat-5: #acd7df;
+$cat-6: #ffcab9;
+$cat-7: #fd9291;
+$cat-8: #e75d6f;
+$cat-9: #c52a52;
+$cat-10: #93003a;
+
+
+.bg-default {
+  background-color: $grey;
+}
+
+.bg-cat-1 {
+  background-color: $cat-1;
+}
+
+.bg-cat-2 {
+  background-color: $cat-2;
+}
+
+.bg-cat-3 {
+  background-color: $cat-3;
+}
+
+.bg-cat-4 {
+  background-color: $cat-4;
+}
+
+.bg-cat-5 {
+  background-color: $cat-5;
+}
+
+.bg-cat-6 {
+  background-color: $cat-6;
+}
+
+.bg-cat-7 {
+  background-color: $cat-7;
+}
+
+.bg-cat-8 {
+  background-color: $cat-8;
+}
+
+.bg-cat-9 {
+  background-color: $cat-9;
+}
+
+.bg-cat-10 {
+  background-color: $cat-10;
+}
+
+
+.fg-cat-1 {
+  color: $cat-1;
+}
+
+.fg-cat-2 {
+  color: $cat-2;
+}
+
+.fg-cat-3 {
+  color: $cat-3;
+}
+
+.fg-cat-4 {
+  color: $cat-4;
+}
+
+.fg-cat-5 {
+  color: $cat-5;
+}
+
+.fg-cat-6 {
+  color: $cat-6;
+}
+
+.fg-cat-7 {
+  color: $cat-7;
+}
+
+.fg-cat-8 {
+  color: $cat-8;
+}
+
+.fg-cat-9 {
+  color: $cat-9;
+}
+
+.fg-cat-10 {
+  color: $cat-10;
+}
