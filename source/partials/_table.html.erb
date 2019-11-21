@@ -3,7 +3,7 @@
     <table id="table-sortable" class="sort">
       <thead>
         <tr>
-          <th>Facility</th>
+          <th class="facility">Facility</th>
           <th>Address</th>
           <th>Total Injury Rate for 2018</th>
           <th>Number of Serious Injuries for 2018</th>
@@ -21,16 +21,18 @@
             <% roundedDart = dart.to_f.round(2) %>
             <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
             <td data-sort="<%= normalisedDart %>">
-              <%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %>
-              <div class="state-bar"></div>
+              <span class="state-bar" style="width: calc(<%= normalisedDart %>/100 * 200%);">
+                <span><%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %></span>
+              </span>
             </td>
 
             <% seriousCount = f["Number of Serious Injuries for 2018"] %>
-            <% roundedSeriousCount = seriousCount.to_f.round(2) %>
+            <% roundedSeriousCount = seriousCount.to_i %>
             <% normalisedCountValue = seriousCount == "UNKNOWN" ? "0" : roundedSeriousCount %>
             <td data-sort="<%= normalisedCountValue %>" >
-              <%= seriousCount == "UNKNOWN" ? "Unavailable" : roundedSeriousCount %>
-              <div class="state-bar"></div>  
+              <span class="state-bar" style="width: calc(<%= normalisedCountValue %>/500 * 100%);">  
+                <span><%= seriousCount == "UNKNOWN" ? "Unavailable" : roundedSeriousCount %></span>
+              </span>  
             </td>
 
             <td data-sort-method='none'><%= f["Source(s) for Locations"] %></td>
