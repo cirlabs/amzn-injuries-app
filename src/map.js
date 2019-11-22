@@ -126,7 +126,7 @@ const tooltipBody = function (feature) {
   sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip
   content.appendChild(h)
   content.appendChild(sub)
-  content.appendChild(formatProperty('Uses robot',
+  content.appendChild(formatProperty('Uses robots',
     boolToString(feature.robots)))
 
   if (feature.valid === 1) {

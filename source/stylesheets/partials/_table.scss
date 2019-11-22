@@ -1,0 +1,142 @@
+
+#table-data {
+  margin: 50px auto;
+  padding: 0 50px;
+  max-width: 960px;
+  position: relative;
+  font-size: 14px;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;  
+    padding-bottom: 0.5em;
+  }
+
+  td, th { 
+      padding: 4px; 
+      border: none;
+      overflow: hidden;
+      text-align: left;
+      vertical-align: middle;
+  }
+
+  tr:hover{
+    background-color: #f8f8f5;
+
+    .state-bar {
+      background-color: #888;
+    }
+
+    span.unknown {
+        color: #000;
+    }
+  }
+
+  th {  
+    font-weight: 400;
+    cursor: pointer;
+    background: url(../images/arrow-sorters.svg) 6px center no-repeat;
+    border-bottom: 2px solid #eee;
+    background-size: 13px 13px;
+    padding: 5px 5px 5px 22px;
+    background-color: #fff;
+  }
+
+  th:hover {
+    cursor: pointer;
+    background-color: #eee;
+  }
+
+  th[data-sort-method='none']{
+    background-image: none;
+    padding-left:4px;
+  }
+
+  th[aria-sort=ascending] {
+    background: url(../images/arrow-sorter-asc.svg) 6px center no-repeat;
+    background-size: 7px 7px;
+  }
+
+  th[aria-sort=descending] {
+    background: url(../images/arrow-sorter-desc.svg) 6px center no-repeat;
+    background-size: 7px 7px;
+  }
+
+  .state-bar {
+    float: left;
+    background-color: #cecece;
+    display: block;
+    height: 100%;
+    width: 0px;
+  }
+
+  .state-bar span {
+    padding-left: 5px;
+  }
+
+  span.unknown {
+    color:#a9a5a5;
+  }
+}
+
+/* show / hide */
+.all {
+  .panel {
+    position: relative;
+    margin: 2em auto;
+    max-height: 255px;
+    overflow: hidden;
+    transition: max-height .5s ease;
+    border-bottom: 2px solid #eee;
+  }
+
+  .action {
+    left: 30%;
+    padding: 1em;
+    text-decoration: none;
+    width: 40%;
+    right: 0;
+  }
+  
+  .show, .hide {
+    position: absolute;
+    bottom: 5em;
+    z-index: 100;
+    text-align: center;
+  }
+
+  .show span{
+    background: url(../images/arrow-sorter-desc.svg) 0 center no-repeat;
+    background-size: 7px 7px;
+    padding-left: 12px;
+  }
+
+  .hide span{
+    
+    background: url(../images/arrow-sorter-asc.svg) 0 center no-repeat;
+    background-size: 7px 7px;
+    padding-left: 12px;
+  }
+
+  .show:target {
+    display: none;
+  }
+
+  .show:target ~ .hide {
+    display: block;
+  }
+
+  .show:target ~ .panel {
+    max-height: 2000px; 
+  }
+
+  .show:target ~ .fade {
+    margin-top: 0;
+  }
+}
+
+
+
+
+
+
