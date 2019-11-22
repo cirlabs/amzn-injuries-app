@@ -1,17 +1,50 @@
 .tooltip-body {
+  max-width: 220px;
+  overflow: auto;
+  padding: 4px;
+
+  .details {
+    padding-bottom: 20px;
+    background-color: aliceblue;
+  }
+
+  h3 {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  h5 {
+    margin: 0;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+    line-height: 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: #999;
+    border-bottom: 1px solid #999;
+  }
+
   p {
-    margin: 0.25em 0;
+    span.key {
+      font-weight: 300;
+    }
+
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.4em;
   }
 
   em.compare {
     color: $black;
+    padding: 0 6px 6px 6px;
   }
 
   div.comparer-chart {
     display: flex;
     position: relative;
     justify-content: space-between;
-    margin: 12px 0;
+    margin: 22px 0;
 
     p {
       margin: 0 5px;
@@ -21,6 +54,7 @@
 
     span {
       flex-grow: 1;
+      position: relative;
       height: 10px;
       border: 1px solid $white;
       border-right-width: 0;
@@ -36,8 +70,43 @@
         color: inherit;
       }
 
-      &.ind-avg-step::after {
+      &.curr-step::after {
+        content: attr(data-curr);
+        position: absolute;
+        top: -20px;
+        color: inherit;
+        font-size: 0.8em;
+        line-height: 1;
+        min-width: 100%;
+        margin-left: -50%;
+      }
+
+      &.ind-avg-step::before {
         content: '▲';
+        position: absolute;
+        bottom: -15px;
+        color: $grey;
+      }
+
+      &.ind-avg-step::after {
+        content: 'average';
+        position: absolute;
+        bottom: -20px;
+        color: $grey;
+        font-size: 0.8em;
+        line-height: 1;
+        margin-left: -50%;
+      }
+
+      &.ind-avg-step.curr-step::before {
+        content: "▼" attr(data-curr);
+        position: absolute;
+        top: -15px;
+        color: inherit;
+      }
+
+      &.ind-avg-step.curr-step::after {
+        content: "▲ average";
         position: absolute;
         bottom: -15px;
         color: $grey;

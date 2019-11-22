@@ -1,10 +1,8 @@
 # Activate and configure extensions
 # https://middlemanapp.com/advanced/configuration/#configuring-extensions
 
-# activate :autoprefixer do |prefix|
-#   prefix.browsers = "last 2 versions"
-# end
-
+activate :sprockets
+activate :asset_hash
 # activate :google_drive, load_sheets: '1GjVjJ-ilYk1TNO9s3bgJzh90ixPQB7KI8QG4dPDEAmM'
 # Layouts
 # https://middlemanapp.com/basics/layouts/
@@ -39,7 +37,8 @@ page '/*.txt', layout: false
 # Build-specific configuration
 # https://middlemanapp.com/advanced/configuration/#environment-specific-settings
 
-# configure :build do
-#   activate :minify_css
-#   activate :minify_javascript
-# end
+configure :build do
+  activate :minify_css
+  # activate :minify_javascript
+  activate :asset_host, :host => '//apps.revealnews.org/amazon-injuries/'
+end

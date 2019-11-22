@@ -1,6 +1,7 @@
 
 const _map = {}
 const AMAZON_ORANGE = '#f38d20'
+const DEFAULT_GREY = '#666'
 const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'
 
 // TODO: replace with new one
@@ -34,8 +35,11 @@ _map.init = () => {
         'type': 'circle',
         'source': 'incidents',
         'paint': {
-          'circle-radius': 4,
-          'circle-color': AMAZON_ORANGE
+          'circle-radius': ['match', ['get', 'valid'], 1, 5, 3],
+          'circle-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, 'rgba(0,0,0,0.1)'],
+          'circle-stroke-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, DEFAULT_GREY],
+          'circle-stroke-width': 1
+
         }
       })
       document.getElementById('loadingIcon').classList.add('hide')
@@ -79,19 +83,42 @@ const toPrecision = function (num) {
   return Math.round(num * 100) / 100
 }
 
+const formatProperty = function (key, value) {
+  let p = document.createElement('p')
+
+  let keyDisplay = document.createElement('span')
+  keyDisplay.classList.add('key')
+  keyDisplay.innerText = key
+  p.appendChild(keyDisplay)
+  p.innerHTML = p.innerHTML + ': ' + value
+  return p
+}
 const tooltipBody = function (feature) {
-  return '<div class="tooltip-body">' +
-  '<p><b>Facility</b>: ' + feature.id + '</p>' +
-  '<p><b>City</b>: ' + feature.city + ', ' + feature.state + '</p>' +
-  '<p><b>All reported injuries</b>: ' + feature.injuryCount + '</p>' +
-  '<p><b>Serious injuries</b>: ' + feature.seriousCount + '</p>' +
-  '<p><b>DART</b>(▼): ' + toPrecision(feature.dart) + '</p>' +
-  compareChart(toPrecision(feature.dart), META.dart) +
-  '<p><em class="compare">It is ' + toPrecision(feature.diffDart) + ' times the industry average(▲) ' + toPrecision(META.dart.industry_avg) + '</em></p>' +
-  '<p><b>TRIR</b>(▼): ' + toPrecision(feature.trir) + '</p>' +
-  compareChart(toPrecision(feature.trir), META.trir) +
-  '<p><em class="compare">It is ' + toPrecision(feature.diffTrir) + ' times the industry average(▲) ' + toPrecision(META.trir.industry_avg) + '</em></p>' +
-  '<p><b>Robots used</b>: ' + feature.robots + '</p></div>'
+  let content = document.createElement('div')
+  content.classList.add('tooltip-body')
+
+  let h = document.createElement('h3')
+  h.innerHTML = feature.id
+
+  let sub = document.createElement('h5')
+  sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip
+  content.appendChild(h)
+  content.appendChild(sub)
+  content.appendChild(formatProperty('Uses robot',
+    boolToString(feature.robots)))
+
+  if (feature.valid === 1) {
+    let deets = document.createElement('div')
+    deets.classList.add('details')
+    deets.appendChild(formatProperty('Injuries reported', feature.injuryCount))
+    deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount))
+    deets.appendChild(formatProperty('TRIR', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'))
+    deets.appendChild(compareChart(toPrecision(feature.trir), META.trir))
+    deets.appendChild(formatProperty('DART', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'))
+    deets.appendChild(compareChart(toPrecision(feature.dart), META.dart))
+    content.appendChild(deets)
+  }
+  return content.outerHTML
 }
 
 const compareChart = function (curr, baseline) {
@@ -110,24 +137,45 @@ const compareChart = function (curr, baseline) {
   for (let i = 0; i < STEP_COUNT; i++) {
     let span = document.createElement('span')
     if (i <= currStep) {
-      span.classList.add('bg-cat-' + currStep)
+      span.classList.add('bg-cat-' + (i + 1))
     } else {
       span.classList.add('bg-default')
     }
-    if (currStep === i) {
+    if (i === currStep) {
       span.classList.add('curr-step')
       span.dataset['curr'] = curr
     }
-    if (i === indAvgStep) {
+    if (i === indAvgStep && i !== currStep) {
       span.classList.add('ind-avg-step')
       span.classList.add('fg-cat-' + currStep)
+      span.dataset['avg'] = baseline.industry_avg
     }
     outerDiv.appendChild(span)
   }
   label = document.createElement('p')
   label.innerText = baseline.max
   outerDiv.appendChild(label)
-  return outerDiv.outerHTML
+  return outerDiv
 }
 
+// const filterData = function (data, validOnly) {
+//   let filterfx = (f) => typeof f.properties.injuryCount !== 'string'
+//   if (!validOnly) {
+//     filterfx = (f) => typeof f.properties.injuryCount === 'string'
+//   }
+//   let clonedData = JSON.parse(JSON.stringify(data))
+//   clonedData.features = clonedData.features.filter(filterfx)
+//     .map((f) => {
+//       f.valid = validOnly
+//       return f
+//     })
+//   return clonedData
+// }
+
+const boolToString = function (bool) {
+  if (typeof bool !== 'boolean') {
+    return 'Unknown'
+  }
+  return bool ? 'yes' : 'no'
+}
 export default _map

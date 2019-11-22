@@ -46,6 +46,7 @@ def to_feature(key, obj)
   lat = obj.delete(@key_lookup['lat'])
   new_obj = fix_keys(obj)
   new_obj['id'] = key
+  new_obj['valid'] = new_obj['injuryCount'] == 'UNKNOWN' ? 0 : 1
   {
     "type": "Feature",
     "properties": new_obj,
