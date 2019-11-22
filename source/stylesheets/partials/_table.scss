@@ -83,6 +83,12 @@
   font-size: 14px;
 }
 
+#contact {
+  border: 2px solid #eee;
+  font-weight: 800;
+  padding: 0 1em;
+}
+
 /* show / hide */
 .all {
   .panel {
@@ -96,12 +102,12 @@
 
   .action {
     left: 30%;
-    padding: 1em 1em 2.3em 1em;
+    padding: 1em 1em 3.6em 1em;;
     text-decoration: none;
     width: 40%;
     right: 0;
   }
-  
+
   .show, .hide {
     position: absolute;
     bottom: 5em;
