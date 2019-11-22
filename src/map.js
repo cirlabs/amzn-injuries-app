@@ -1,13 +1,15 @@
 
 const _map = {}
-const AMAZON_ORANGE = '#f38d20'
+// const AMAZON_ORANGE = '#f38d20'
 const DEFAULT_GREY = '#666'
 const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'
 
 // TODO: replace with new one
 const STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus'
 const WAREHOUSE_LAYER = 'warehouses'
+const UNKNOWNS_LAYER = 'unknowns'
 const STEP_COUNT = 10
+const COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
 
 mapboxgl.accessToken = TOKEN
 
@@ -18,7 +20,7 @@ _map.init = () => {
   const map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    maxZoom: 15,
+    maxZoom: 5,
     bounds: bounds,
     fitBoundsOptions: { padding: 20 }
   })
@@ -30,22 +32,38 @@ _map.init = () => {
         'type': 'geojson',
         'data': INCIDENTS
       })
+
       map.addLayer({
         'id': WAREHOUSE_LAYER,
         'type': 'circle',
         'source': 'incidents',
         'paint': {
-          'circle-radius': ['match', ['get', 'valid'], 1, 5, 3],
-          'circle-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, 'rgba(0,0,0,0.1)'],
-          'circle-stroke-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, DEFAULT_GREY],
-          'circle-stroke-width': 1
-
-        }
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 10],
+          'circle-color': createStyle(),
+          'circle-stroke-color': DEFAULT_GREY,
+          'circle-stroke-width': 1,
+          'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0.4]
+        },
+        'filter': ['==', 'valid', 1]
       })
+      map.addLayer({
+        'id': UNKNOWNS_LAYER,
+        'type': 'circle',
+        'source': 'incidents',
+        'paint': {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 10, 7],
+          'circle-color': 'rgba(0,0,0,0.1)',
+          'circle-stroke-color': DEFAULT_GREY,
+          'circle-stroke-width': 0.5
+        },
+        'filter': ['==', 'valid', 0]
+      }, WAREHOUSE_LAYER)
+
       document.getElementById('loadingIcon').classList.add('hide')
       document.getElementById('map').classList.remove('invisible')
       // document.getElementById('legend').classList.remove('invisible')
       map.setMaxBounds(map.getBounds())
+      map.doubleClickZoom.enable()
       setPopups(map)
       resolve(map)
     })
@@ -54,10 +72,10 @@ _map.init = () => {
 
 const setPopups = (map) => {
   const popup = new mapboxgl.Popup({
-    closeButton: false,
+    closeButton: true,
     closeOnClick: true
   })
-  map.on('mouseenter', WAREHOUSE_LAYER, function (e) {
+  const showPopup = function (e) {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer'
 
@@ -68,12 +86,15 @@ const setPopups = (map) => {
     popup.setLngLat(e.lngLat)
       .setHTML(tooltipBody(feature))
       .addTo(map)
-  })
+  }
+  const hidePopup = function () {
+    map.getCanvas().style.cursor = ''
+    popup.remove()
+  }
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
+  map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
 
-  // map.on('mouseleave', WAREHOUSE_LAYER, function () {
-  //   map.getCanvas().style.cursor = ''
-  //   popup.remove()
-  // })
+  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {
@@ -93,6 +114,7 @@ const formatProperty = function (key, value) {
   p.innerHTML = p.innerHTML + ': ' + value
   return p
 }
+
 const tooltipBody = function (feature) {
   let content = document.createElement('div')
   content.classList.add('tooltip-body')
@@ -177,5 +199,16 @@ const boolToString = function (bool) {
     return 'Unknown'
   }
   return bool ? 'yes' : 'no'
+}
+
+const createStyle = () => {
+  let baseline = META.trir
+  let stepSize = baseline.max / STEP_COUNT
+  let conditions = ['step', ['get', 'trir'], 'red']
+  for (let i = 0; i < STEP_COUNT; i++) {
+    conditions.push(i * stepSize)
+    conditions.push(COLORS[i])
+  }
+  return conditions
 }
 export default _map

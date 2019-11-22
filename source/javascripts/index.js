@@ -10360,14 +10360,16 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var _map = {};
-var AMAZON_ORANGE = '#f38d20';
+var _map = {}; // const AMAZON_ORANGE = '#f38d20'
+
 var DEFAULT_GREY = '#666';
 var TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'; // TODO: replace with new one
 
 var STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus';
 var WAREHOUSE_LAYER = 'warehouses';
+var UNKNOWNS_LAYER = 'unknowns';
 var STEP_COUNT = 10;
+var COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a'];
 mapboxgl.accessToken = TOKEN;
 
 _map.init = function () {
@@ -10375,7 +10377,7 @@ _map.init = function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    maxZoom: 15,
+    maxZoom: 5,
     bounds: bounds,
     fitBoundsOptions: {
       padding: 20
@@ -10393,16 +10395,31 @@ _map.init = function () {
         'type': 'circle',
         'source': 'incidents',
         'paint': {
-          'circle-radius': ['match', ['get', 'valid'], 1, 5, 3],
-          'circle-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, 'rgba(0,0,0,0.1)'],
-          'circle-stroke-color': ['match', ['get', 'valid'], 1, AMAZON_ORANGE, DEFAULT_GREY],
-          'circle-stroke-width': 1
-        }
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 10],
+          'circle-color': createStyle(),
+          'circle-stroke-color': DEFAULT_GREY,
+          'circle-stroke-width': 1,
+          'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0.4]
+        },
+        'filter': ['==', 'valid', 1]
       });
+      map.addLayer({
+        'id': UNKNOWNS_LAYER,
+        'type': 'circle',
+        'source': 'incidents',
+        'paint': {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 10, 7],
+          'circle-color': 'rgba(0,0,0,0.1)',
+          'circle-stroke-color': DEFAULT_GREY,
+          'circle-stroke-width': 0.5
+        },
+        'filter': ['==', 'valid', 0]
+      }, WAREHOUSE_LAYER);
       document.getElementById('loadingIcon').classList.add('hide');
       document.getElementById('map').classList.remove('invisible'); // document.getElementById('legend').classList.remove('invisible')
 
       map.setMaxBounds(map.getBounds());
+      map.doubleClickZoom.enable();
       setPopups(map);
       resolve(map);
     });
@@ -10411,20 +10428,26 @@ _map.init = function () {
 
 var setPopups = function setPopups(map) {
   var popup = new mapboxgl.Popup({
-    closeButton: false,
+    closeButton: true,
     closeOnClick: true
   });
-  map.on('mouseenter', WAREHOUSE_LAYER, function (e) {
+
+  var showPopup = function showPopup(e) {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer';
     var feature = e.features[0].properties; // Populate the popup and set its coordinates
     // based on the feature found.
 
     popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
-  }); // map.on('mouseleave', WAREHOUSE_LAYER, function () {
-  //   map.getCanvas().style.cursor = ''
-  //   popup.remove()
-  // })
+  };
+
+  var hidePopup = function hidePopup() {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  };
+
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
+  map.on('mouseenter', UNKNOWNS_LAYER, showPopup); // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 };
 
 var toPrecision = function toPrecision(num) {
@@ -10533,6 +10556,19 @@ var boolToString = function boolToString(bool) {
   }
 
   return bool ? 'yes' : 'no';
+};
+
+var createStyle = function createStyle() {
+  var baseline = META.trir;
+  var stepSize = baseline.max / STEP_COUNT;
+  var conditions = ['step', ['get', 'trir'], 'red'];
+
+  for (var i = 0; i < STEP_COUNT; i++) {
+    conditions.push(i * stepSize);
+    conditions.push(COLORS[i]);
+  }
+
+  return conditions;
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);
