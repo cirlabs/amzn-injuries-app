@@ -79,6 +79,10 @@
   }
 }
 
+#sources {
+  font-size: 12px;
+}
+
 /* show / hide */
 .all {
   .panel {
@@ -92,7 +96,7 @@
 
   .action {
     left: 30%;
-    padding: 1em;
+    padding: 1em 1em 2em 1em;
     text-decoration: none;
     width: 40%;
     right: 0;
