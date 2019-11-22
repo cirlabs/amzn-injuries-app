@@ -10487,11 +10487,26 @@ var tooltipBody = function tooltipBody(feature) {
     deets.classList.add('details');
     deets.appendChild(formatProperty('Injuries reported', feature.injuryCount));
     deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount));
-    deets.appendChild(formatProperty('TRIR', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
+    deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
     deets.appendChild(compareChart(toPrecision(feature.trir), META.trir));
-    deets.appendChild(formatProperty('DART', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
+    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart));
     content.appendChild(deets);
+  } else {
+    var _deets = document.createElement('p');
+
+    _deets.classList.add('contact');
+
+    _deets.innerText = 'We don\’t have the records for this warehouse. If you work or have worked at this warehouse, it\’s your right to get the injury records. Here\’s what you can do: ';
+    var a = document.createElement('a');
+    var linkText = document.createTextNode("https://www.revealnews.org/amazonrecords");
+    a.appendChild(linkText);
+    a.title = "Revealnews: Amazon records";
+    a.href = "https://www.revealnews.org/amazonrecords";
+
+    _deets.appendChild(a);
+
+    content.appendChild(_deets);
   }
 
   return content.outerHTML;
