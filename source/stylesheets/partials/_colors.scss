@@ -1,6 +1,7 @@
 $black: #111;
 $white: #fff;
 $grey: #666;
+$light-grey: #ccc;
 $reveal-orange: #f38d20;
 $amazon-organe: #f90;
 
@@ -16,7 +17,7 @@ $cat-9: #c52a52;
 $cat-10: #93003a;
 
 .bg-default {
-  background-color: $grey;
+  background-color: $light-grey;
 }
 
 .bg-cat-1 {

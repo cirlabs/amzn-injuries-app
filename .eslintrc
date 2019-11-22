@@ -7,7 +7,8 @@
     "pym": true,
     "mapboxgl": true,
     "INCIDENTS": true,
-    "META": true
+    "META": true,
+    "SEARCH_TERMS": true
   },
   "rules": {
     "semi": 2,

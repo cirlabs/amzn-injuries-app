@@ -5,37 +5,55 @@ import 'core-js'
 import fontLoader from 'font'
 import map from 'map'
 import tablesort from 'Tablesort'
-import number from 'tablesort.number.js';
+import number from 'tablesort.number.js'
+import autocomplete from 'autocomplete'
 
 (function () {
-  let app = {}
+  let app = {
+    searchQuery: ''
+  }
 
   const wireEvents = () => {}
 
+  const handleSearchInput = (e) => {
+    app.filteredIdList = e.detail.values
+    // app.map.setFilters(app.filteredIdList)
+
+    // TODO: add handlers for map and table
+  }
+
+  const initAutoComplete = () => {
+    let searchBars = document.getElementsByClassName('autocomplete')
+    autocomplete.init(searchBars, SEARCH_TERMS, {
+      queryChangeHandler: handleSearchInput
+    })
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     app.pymChild = new pym.Child()
-    fontLoader.loadFonts() 
+    fontLoader.loadFonts()
     app.height = window.innerHeight
     app.width = window.innerWidth
 
+    app.filteredIdList = INCIDENTS.features.map((f) => f.properties.id)
     map.init()
       .then((map) => {
         app.map = map
         wireEvents()
         app.pymChild.sendHeight()
       })
-    
-    var table =  document.getElementById('table-sortable');
-    var sort = new tablesort(table);
-    
+
+    let table = document.getElementById('table-sortable')
+    tablesort(table)
+    initAutoComplete()
+
     // This should be a shim, or wrapped as a module
-    number.shim(tablesort);  
+    number.shim(tablesort)
 
     // refresh sorting, once searched
     // sort.refresh();
-      
+
     app.pymChild.sendHeight()
-   
   })
 
   // TODO: implement this

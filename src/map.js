@@ -56,7 +56,7 @@ _map.init = () => {
           'circle-stroke-color': DEFAULT_GREY,
           'circle-stroke-width': 0.5
         },
-        'filter': ['==', 'valid', 0]
+        'filter': ['all', ['==', 'valid', 0]]
       }, WAREHOUSE_LAYER)
 
       document.getElementById('loadingIcon').classList.add('hide')
@@ -68,6 +68,22 @@ _map.init = () => {
       resolve(map)
     })
   })
+}
+
+_map.setFilters = function (selectedIds) {
+  let filter = buildFilter(selectedIds)
+  console.log('v', ['all', ['==', 'valid', 1]].concat(filter))
+  // this.map.setFilter(UNKNOWNS_LAYER,
+  //   ['all', ['==', 'valid', 0]].concat(filter))
+  //this.map.setFilter(WAREHOUSE_LAYER,
+    //['all', ['==', 'valid', 1]].concat(filter))
+}
+
+const buildFilter = function (selectedIds) {
+  let filter = ['in', 'id']
+  filter.concat(['TUL1'])
+  console.log(filter)
+  return filter
 }
 
 const setPopups = (map) => {
@@ -211,4 +227,5 @@ const createStyle = () => {
   }
   return conditions
 }
+
 export default _map

@@ -9598,6 +9598,287 @@ try {
 
 /***/ }),
 
+/***/ "./src/autocomplete.js":
+/*!*****************************!*\
+  !*** ./src/autocomplete.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils */ "./src/utils.js");
+
+var currentFocus;
+var inputEls;
+var wordList;
+var options;
+var valueMap;
+
+var addEventListenerToCollection = function addEventListenerToCollection(collection, event, handler) {
+  for (var i = 0; i < inputEls.length; i++) {
+    collection.item(i).addEventListener(event, handler);
+  }
+};
+
+var setValueInInputs = function setValueInInputs(collection, value) {
+  for (var i = 0; i < inputEls.length; i++) {
+    collection.item(i).value = value;
+  }
+};
+
+var setValidValue = function setValidValue() {
+  var currVal = inputEls.item(0).value;
+  var allVals = true;
+
+  for (var i = 1; i < inputEls.length; i++) {
+    allVals = allVals && inputEls.item(i).value === currVal;
+  }
+
+  if (!allVals || !wordList.includes(currVal)) {
+    currVal = window.app.searchQuery;
+    setValueInInputs(inputEls, currVal);
+  }
+
+  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+    detail: {
+      query: currVal,
+      values: valueMap[currVal]
+    }
+  }));
+};
+
+var closeAllLists = function closeAllLists(elmnt) {
+  var x = document.getElementsByClassName('autocomplete-items'); // ignore if click is triggered on an inputEl
+
+  if (elmnt && utils__WEBPACK_IMPORTED_MODULE_0__["default"].collectionContains(inputEls, elmnt)) {
+    return;
+  }
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = x[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var el = _step.value;
+      el.parentNode.removeChild(el);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  if (elmnt) {
+    setValidValue();
+  }
+};
+
+var selectionHandler = function selectionHandler(e) {
+  var query = this.getElementsByTagName('input')[0].value;
+  setValueInInputs(inputEls, query);
+  closeAllLists();
+  this.dispatchEvent(new window.CustomEvent('queryChanged'), {
+    query: query
+  });
+};
+
+var addItemsToList = function addItemsToList(items) {
+  var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  closeAllLists();
+  currentFocus = -1; // create a div element that will contain the items (values):
+
+  var div = document.createElement('div');
+  div.setAttribute('id', this.id + '-autocomplete-list');
+  div.setAttribute('class', 'autocomplete-items');
+  this.parentNode.appendChild(div);
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var el = _step2.value;
+      var opt = document.createElement('div');
+      opt.innerHTML = "".concat(utils__WEBPACK_IMPORTED_MODULE_0__["default"].wrapSubstring(el, val), "\n      <input type='hidden' value='").concat(el, "'>"); // handle selection
+
+      opt.addEventListener('click', selectionHandler);
+      div.appendChild(opt);
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+        _iterator2["return"]();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  if (!items || items.length === 0) {
+    var noRes = document.createElement('div');
+    noRes.innerHTML = 'No cities match your input.';
+    noRes.classList = 'notfound';
+    div.appendChild(noRes);
+  }
+};
+
+var inputHandler = function inputHandler(e) {
+  var val = this.value;
+
+  if (!val) {
+    closeAllLists();
+    return;
+  }
+
+  var matches = []; // for each item in the array...
+
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = wordList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var el = _step3.value;
+
+      if (matches.length === options.maxItems) {
+        break;
+      }
+
+      if (el.toUpperCase().includes(val.toUpperCase())) {
+        matches.push(el);
+      }
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+        _iterator3["return"]();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
+
+  addItemsToList.bind(this)(matches, val);
+};
+
+var removeActive = function removeActive(x) {
+  // a function to remove the 'active' class from all autocomplete items:
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = x[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var el = _step4.value;
+      el.classList.remove('autocomplete-active');
+    }
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+        _iterator4["return"]();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+};
+
+var addActive = function addActive(x) {
+  if (!x) return false;
+  removeActive(x);
+  if (currentFocus >= x.length) currentFocus = 0;
+  if (currentFocus < 0) currentFocus = x.length - 1;
+  x[currentFocus].classList.add('autocomplete-active');
+};
+
+var keyDownHandler = function keyDownHandler(e) {
+  var x = document.getElementById(this.id + '-autocomplete-list');
+  if (x) x = x.getElementsByTagName('div');
+
+  if (e.keyCode === 40) {
+    // If the arrow DOWN key is pressed, increase the currentFocus variable:
+    currentFocus++; // and and make the current item more visible:
+
+    addActive(x);
+  } else if (e.keyCode === 38) {
+    // up
+    // If the arrow UP key is pressed, decrease the currentFocus variable:
+    currentFocus--; // and and make the current item more visible:
+
+    addActive(x);
+  } else if (e.keyCode === 13) {
+    e.preventDefault();
+
+    if (currentFocus > -1) {
+      if (x) x[currentFocus].click();
+    }
+  }
+};
+
+var clickHandler = function clickHandler(elmnt) {
+  this.value = null;
+  inputHandler.bind(this)(elmnt);
+};
+
+var _autocomplete = {};
+
+_autocomplete.init = function (inputs, words) {
+  var optionsOverrides = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var defaultOptions = {
+    maxItems: 10,
+    queryChangeHandler: null
+  };
+  options = Object.assign(defaultOptions, optionsOverrides);
+  inputEls = inputs;
+  wordList = Object.keys(words);
+  valueMap = words; // handle click to dropdown
+
+  addEventListenerToCollection(inputs, 'click', clickHandler); // Handle input to the text box
+
+  addEventListenerToCollection(inputs, 'input', inputHandler); // handle keyboard nav
+
+  addEventListenerToCollection(inputs, 'keydown', keyDownHandler); // handle click away from autocompletes
+
+  document.addEventListener('click', function (e) {
+    closeAllLists(e.target);
+  });
+  addEventListenerToCollection(inputs, 'queryChanged', options.queryChangeHandler);
+};
+
+_autocomplete.setCity = function (query) {
+  setValueInInputs(inputEls, query);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (_autocomplete);
+
+/***/ }),
+
 /***/ "./src/font.js":
 /*!*********************!*\
   !*** ./src/font.js ***!
@@ -10014,6 +10295,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152__ = __webpack_require__(/*! Tablesort */ "./node_modules/Tablesort/src/tablesort.js");
 /* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152___default = /*#__PURE__*/__webpack_require__.n(Tablesort__WEBPACK_IMPORTED_MODULE_152__);
 /* harmony import */ var tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! tablesort.number.js */ "./src/tablesort.number.js");
+/* harmony import */ var autocomplete__WEBPACK_IMPORTED_MODULE_154__ = __webpack_require__(/*! autocomplete */ "./src/autocomplete.js");
+
 
 
 
@@ -10319,22 +10602,40 @@ __webpack_require__.r(__webpack_exports__);
 
 
 (function () {
-  var app = {};
+  var app = {
+    searchQuery: ''
+  };
 
   var wireEvents = function wireEvents() {};
+
+  var handleSearchInput = function handleSearchInput(e) {
+    app.filteredIdList = e.detail.values; // app.map.setFilters(app.filteredIdList)
+    // TODO: add handlers for map and table
+  };
+
+  var initAutoComplete = function initAutoComplete() {
+    var searchBars = document.getElementsByClassName('autocomplete');
+    autocomplete__WEBPACK_IMPORTED_MODULE_154__["default"].init(searchBars, SEARCH_TERMS, {
+      queryChangeHandler: handleSearchInput
+    });
+  };
 
   document.addEventListener('DOMContentLoaded', function () {
     app.pymChild = new pym.Child();
     font__WEBPACK_IMPORTED_MODULE_150__["default"].loadFonts();
     app.height = window.innerHeight;
     app.width = window.innerWidth;
+    app.filteredIdList = INCIDENTS.features.map(function (f) {
+      return f.properties.id;
+    });
     map__WEBPACK_IMPORTED_MODULE_151__["default"].init().then(function (map) {
       app.map = map;
       wireEvents();
       app.pymChild.sendHeight();
     });
     var table = document.getElementById('table-sortable');
-    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table); // This should be a shim, or wrapped as a module
+    Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table);
+    initAutoComplete(); // This should be a shim, or wrapped as a module
 
     tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // refresh sorting, once searched
     // sort.refresh();
@@ -10413,7 +10714,7 @@ _map.init = function () {
           'circle-stroke-color': DEFAULT_GREY,
           'circle-stroke-width': 0.5
         },
-        'filter': ['==', 'valid', 0]
+        'filter': ['all', ['==', 'valid', 0]]
       }, WAREHOUSE_LAYER);
       document.getElementById('loadingIcon').classList.add('hide');
       document.getElementById('map').classList.remove('invisible'); // document.getElementById('legend').classList.remove('invisible')
@@ -10424,6 +10725,21 @@ _map.init = function () {
       resolve(map);
     });
   });
+};
+
+_map.setFilters = function (selectedIds) {
+  var filter = buildFilter(selectedIds);
+  console.log('v', ['all', ['==', 'valid', 1]].concat(filter)); // this.map.setFilter(UNKNOWNS_LAYER,
+  //   ['all', ['==', 'valid', 0]].concat(filter))
+  //this.map.setFilter(WAREHOUSE_LAYER,
+  //['all', ['==', 'valid', 1]].concat(filter))
+};
+
+var buildFilter = function buildFilter(selectedIds) {
+  var filter = ['in', 'id'];
+  filter.concat(['TUL1']);
+  console.log(filter);
+  return filter;
 };
 
 var setPopups = function setPopups(map) {
@@ -10611,6 +10927,49 @@ _number.shim = function (tablesort) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_number);
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var utils = {};
+
+utils.wrapSubstring = function (str, substr, before, after) {
+  var i = str.toUpperCase().indexOf(substr.toUpperCase());
+  var l = substr.length;
+  before = before || "<span class='yellow-bg black-fg'>";
+  after = after || '</span>';
+  return "".concat(str.substr(0, i)).concat(before).concat(str.substr(i, l)).concat(after).concat(str.substr(i + l));
+};
+
+utils.collectionContains = function (collection, el) {
+  var id = el.getAttribute('id');
+
+  if (id) {
+    return collection.namedItem(id) !== null;
+  }
+
+  var ret = false;
+
+  for (var i in collection) {
+    ret = ret || collection.item(i) === el;
+
+    if (ret) {
+      break;
+    }
+  }
+
+  return ret;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (utils);
 
 /***/ })
 
