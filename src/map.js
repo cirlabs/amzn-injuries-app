@@ -139,6 +139,19 @@ const tooltipBody = function (feature) {
     deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'))
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart))
     content.appendChild(deets)
+  } else {
+    let deets = document.createElement('p')
+    deets.classList.add('contact')
+    deets.innerText = 'We don\’t have the records for this warehouse. If you work or have worked at this warehouse, it\’s your right to get the injury records. Here\’s what you can do: '
+    
+    var a = document.createElement('a');
+    var linkText = document.createTextNode("https://www.revealnews.org/amazonrecords");
+    a.appendChild(linkText);
+    a.title = "Revealnews: Amazon records";
+    a.href = "https://www.revealnews.org/amazonrecords";
+    deets.appendChild(a);
+  
+    content.appendChild(deets)
   }
   return content.outerHTML
 }
