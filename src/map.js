@@ -134,9 +134,9 @@ const tooltipBody = function (feature) {
     deets.classList.add('details')
     deets.appendChild(formatProperty('Injuries reported', feature.injuryCount))
     deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount))
-    deets.appendChild(formatProperty('TRIR', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'))
+    deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'))
     deets.appendChild(compareChart(toPrecision(feature.trir), META.trir))
-    deets.appendChild(formatProperty('DART', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'))
+    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'))
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart))
     content.appendChild(deets)
   }
