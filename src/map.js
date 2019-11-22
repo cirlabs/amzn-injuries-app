@@ -72,7 +72,7 @@ _map.init = () => {
 
 const setPopups = (map) => {
   const popup = new mapboxgl.Popup({
-    closeButton: true,
+    closeButton: false,
     closeOnClick: true
   })
   const showPopup = function (e) {
@@ -94,7 +94,7 @@ const setPopups = (map) => {
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
 
-  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {

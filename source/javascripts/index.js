@@ -10428,7 +10428,7 @@ _map.init = function () {
 
 var setPopups = function setPopups(map) {
   var popup = new mapboxgl.Popup({
-    closeButton: true,
+    closeButton: false,
     closeOnClick: true
   });
 
@@ -10447,7 +10447,8 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
-  map.on('mouseenter', UNKNOWNS_LAYER, showPopup); // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
+  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
 
 var toPrecision = function toPrecision(num) {
