@@ -10334,7 +10334,9 @@ __webpack_require__.r(__webpack_exports__);
       app.pymChild.sendHeight();
     });
     var table = document.getElementById('table-sortable');
-    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table); // This should be a shim, or wrapped as a module
+    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table, {
+      descending: true
+    }); // This should be a shim, or wrapped as a module
 
     tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // refresh sorting, once searched
     // sort.refresh();
@@ -10478,7 +10480,7 @@ var tooltipBody = function tooltipBody(feature) {
   sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip;
   content.appendChild(h);
   content.appendChild(sub);
-  content.appendChild(formatProperty('Uses robot', boolToString(feature.robots)));
+  content.appendChild(formatProperty('Uses robots', boolToString(feature.robots)));
 
   if (feature.valid === 1) {
     var deets = document.createElement('div');

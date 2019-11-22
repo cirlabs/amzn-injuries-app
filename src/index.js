@@ -26,7 +26,9 @@ import number from 'tablesort.number.js';
       })
     
     var table =  document.getElementById('table-sortable');
-    var sort = new tablesort(table);
+    var sort = new tablesort(table, {
+      descending: true
+    });
     
     // This should be a shim, or wrapped as a module
     number.shim(tablesort);  
