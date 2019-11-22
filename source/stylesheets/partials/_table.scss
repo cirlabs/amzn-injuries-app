@@ -80,7 +80,7 @@
 }
 
 #sources {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* show / hide */
@@ -96,7 +96,7 @@
 
   .action {
     left: 30%;
-    padding: 1em 1em 2em 1em;
+    padding: 1em 1em 2.3em 1em;
     text-decoration: none;
     width: 40%;
     right: 0;
@@ -107,6 +107,7 @@
     bottom: 5em;
     z-index: 100;
     text-align: center;
+    color: #222;
   }
 
   .show span{
@@ -116,7 +117,6 @@
   }
 
   .hide span{
-    
     background: url(../images/arrow-sorter-asc.svg) 0 center no-repeat;
     background-size: 7px 7px;
     padding-left: 12px;
