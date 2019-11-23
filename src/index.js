@@ -44,12 +44,12 @@ import autocomplete from 'autocomplete'
       })
 
     let table = document.getElementById('table-sortable')
+    number.shim(tablesort)
     tablesort(table, {
       descending: true
     })
     initAutoComplete()
 
-    // This should be a shim, or wrapped as a module
     number.shim(tablesort)
 
     // refresh sorting, once searched
