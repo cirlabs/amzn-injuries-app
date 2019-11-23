@@ -30,12 +30,12 @@ const setValidValue = function () {
     currVal = window.app.searchQuery
     setValueInInputs(inputEls, currVal)
   }
-  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
-    { detail: {
-      query: currVal,
-      values: valueMap[currVal]
-    }
-    }))
+  // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+  //   { detail: {
+  //     query: currVal,
+  //     values: valueMap[currVal]
+  //   }
+  //   }))
 }
 
 const closeAllLists = function (elmnt) {
@@ -59,7 +59,13 @@ const selectionHandler = function (e) {
   const query = this.getElementsByTagName('input')[0].value
   setValueInInputs(inputEls, query)
   closeAllLists()
-  this.dispatchEvent(new window.CustomEvent('queryChanged'), { query: query })
+  console.log('here', query, valueMap[query]);
+  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', { detail:
+    {
+      query: query,
+      values: valueMap[query]
+    }
+  }))
 }
 
 const addItemsToList = function (items, val = null) {
@@ -83,7 +89,7 @@ const addItemsToList = function (items, val = null) {
   }
   if (!items || items.length === 0) {
     const noRes = document.createElement('div')
-    noRes.innerHTML = 'No cities match your input.'
+    noRes.innerHTML = 'No matching Amazon warehouse found.'
     noRes.classList = 'notfound'
     div.appendChild(noRes)
   }

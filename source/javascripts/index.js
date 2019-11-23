@@ -9638,14 +9638,13 @@ var setValidValue = function setValidValue() {
   if (!allVals || !wordList.includes(currVal)) {
     currVal = window.app.searchQuery;
     setValueInInputs(inputEls, currVal);
-  }
+  } // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+  //   { detail: {
+  //     query: currVal,
+  //     values: valueMap[currVal]
+  //   }
+  //   }))
 
-  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
-    detail: {
-      query: currVal,
-      values: valueMap[currVal]
-    }
-  }));
 };
 
 var closeAllLists = function closeAllLists(elmnt) {
@@ -9688,9 +9687,13 @@ var selectionHandler = function selectionHandler(e) {
   var query = this.getElementsByTagName('input')[0].value;
   setValueInInputs(inputEls, query);
   closeAllLists();
-  this.dispatchEvent(new window.CustomEvent('queryChanged'), {
-    query: query
-  });
+  console.log('here', query, valueMap[query]);
+  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+    detail: {
+      query: query,
+      values: valueMap[query]
+    }
+  }));
 };
 
 var addItemsToList = function addItemsToList(items) {
@@ -9732,7 +9735,7 @@ var addItemsToList = function addItemsToList(items) {
 
   if (!items || items.length === 0) {
     var noRes = document.createElement('div');
-    noRes.innerHTML = 'No cities match your input.';
+    noRes.innerHTML = 'No matching Amazon warehouse found.';
     noRes.classList = 'notfound';
     div.appendChild(noRes);
   }
@@ -10609,8 +10612,14 @@ __webpack_require__.r(__webpack_exports__);
   var wireEvents = function wireEvents() {};
 
   var handleSearchInput = function handleSearchInput(e) {
-    app.filteredIdList = e.detail.values; // app.map.setFilters(app.filteredIdList)
-    // TODO: add handlers for map and table
+    console.log('search input');
+    app.filteredIdList = e.detail.values;
+
+    if (!app.filteredIdList) {
+      app.filteredIdList = null;
+    }
+
+    map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map and table
   };
 
   var initAutoComplete = function initAutoComplete() {
@@ -10729,17 +10738,22 @@ _map.init = function () {
 
 _map.setFilters = function (selectedIds) {
   var filter = buildFilter(selectedIds);
-  console.log('v', ['all', ['==', 'valid', 1]].concat(filter)); // this.map.setFilter(UNKNOWNS_LAYER,
-  //   ['all', ['==', 'valid', 0]].concat(filter))
-  //this.map.setFilter(WAREHOUSE_LAYER,
-  //['all', ['==', 'valid', 1]].concat(filter))
+
+  if (filter.length === 0) {
+    this.map.setFilter(UNKNOWNS_LAYER, ['==', 'valid', 0]);
+    this.map.setFilter(WAREHOUSE_LAYER, ['==', 'valid', 1]);
+  }
+
+  this.map.setFilter(UNKNOWNS_LAYER, ['all', ['==', 'valid', 0], filter]);
+  this.map.setFilter(WAREHOUSE_LAYER, ['all', ['==', 'valid', 1], filter]);
 };
 
 var buildFilter = function buildFilter(selectedIds) {
-  var filter = ['in', 'id'];
-  filter.concat(['TUL1']);
-  console.log(filter);
-  return filter;
+  if (!selectedIds || selectedIds.length === 0) {
+    return [];
+  }
+
+  return ['in', 'id'].concat(selectedIds);
 };
 
 var setPopups = function setPopups(map) {

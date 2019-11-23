@@ -72,18 +72,21 @@ _map.init = () => {
 
 _map.setFilters = function (selectedIds) {
   let filter = buildFilter(selectedIds)
-  console.log('v', ['all', ['==', 'valid', 1]].concat(filter))
-  // this.map.setFilter(UNKNOWNS_LAYER,
-  //   ['all', ['==', 'valid', 0]].concat(filter))
-  //this.map.setFilter(WAREHOUSE_LAYER,
-    //['all', ['==', 'valid', 1]].concat(filter))
+  if (filter.length === 0) {
+    this.map.setFilter(UNKNOWNS_LAYER, ['==', 'valid', 0])
+    this.map.setFilter(WAREHOUSE_LAYER, ['==', 'valid', 1])
+  }
+  this.map.setFilter(UNKNOWNS_LAYER,
+    ['all', ['==', 'valid', 0], filter])
+  this.map.setFilter(WAREHOUSE_LAYER,
+    ['all', ['==', 'valid', 1], filter])
 }
 
 const buildFilter = function (selectedIds) {
-  let filter = ['in', 'id']
-  filter.concat(['TUL1'])
-  console.log(filter)
-  return filter
+  if (!selectedIds || selectedIds.length === 0) {
+    return []
+  }
+  return ['in', 'id'].concat(selectedIds)
 }
 
 const setPopups = (map) => {

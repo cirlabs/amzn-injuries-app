@@ -5,6 +5,7 @@ $font: "ff-meta-serif-web-pro, Georgia, Times, Times New Roman, serif";
 $lato: lato, Helvetica, sans-serif;
 
 @import './partials/map';
+@import './partials/searchbar';
 
 body {
   font-family: $font;
@@ -31,11 +32,11 @@ h3 {
 table {
   font-size: 14px;
   border-collapse: collapse;
-	width: 100%;  
+	width: 100%;
 }
 
-td, th { 
-	padding: 4px; 
+td, th {
+	padding: 4px;
 	border: none;
 	overflow: hidden;
 	text-align: left;
@@ -52,7 +53,7 @@ tr:hover{
 }
 
 
-th {  
+th {
   font-weight: 400;
   cursor: pointer;
   background: url(../images/arrow-sorters.svg) 6px center no-repeat;
