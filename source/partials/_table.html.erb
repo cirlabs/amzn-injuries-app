@@ -16,7 +16,7 @@
     <tbody>
       <% data.amazon.keys.each do |key| %>
         <% f = data.amazon[key] %>
-        <tr>
+        <tr data-facility="<%= key %>">
           <td><%= key %></td>
           <td><%= f["City"] %>, <%= f["State"] %> &mdash; <%= f["Zip Code"] %></td>
 

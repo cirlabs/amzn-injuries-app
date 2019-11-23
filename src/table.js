@@ -32,7 +32,11 @@ _table.init = (app) => {
 
 
 _table.setFilters = function (selectedIds) {
-  
+  if(selectedIds == undefined) return
+  selectedIds.forEach(key => {
+    console.log(key)
+    document.querySelector(`[data-facility='${key}']`).classList.add("show")
+  });
 //   let filters = buildFilters(selectedIds)
 //   this.table.setFilter(UNKNOWNS_LAYER, filters[0])
 //   this.table.setFilter(WAREHOUSE_LAYER, filters[1])

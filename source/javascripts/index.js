@@ -11098,7 +11098,12 @@ _table.init = function (app) {
   // sort.refresh();
 };
 
-_table.setFilters = function (selectedIds) {//   let filters = buildFilters(selectedIds)
+_table.setFilters = function (selectedIds) {
+  if (selectedIds == undefined) return;
+  selectedIds.forEach(function (key) {
+    console.log(key);
+    document.querySelector("[data-facility='".concat(key, "']")).classList.add("show");
+  }); //   let filters = buildFilters(selectedIds)
   //   this.table.setFilter(UNKNOWNS_LAYER, filters[0])
   //   this.table.setFilter(WAREHOUSE_LAYER, filters[1])
   //   if (selectedIds && selectedIds.length === 1) {
