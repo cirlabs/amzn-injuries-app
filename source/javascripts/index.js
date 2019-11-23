@@ -10737,11 +10737,12 @@ __webpack_require__.r(__webpack_exports__);
     });
     var table = document.getElementById('table-sortable');
     tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a);
-    Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table, {
+    var sort = Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table, {
       descending: true
     });
     initAutoComplete();
-    tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // refresh sorting, once searched
+    tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // issue event on expand and hide
+    // refresh sorting, once searched
     // sort.refresh();
 
     app.pymChild.sendHeight();

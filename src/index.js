@@ -45,13 +45,15 @@ import autocomplete from 'autocomplete'
 
     let table = document.getElementById('table-sortable')
     number.shim(tablesort)
-    tablesort(table, {
+    let sort = tablesort(table, {
       descending: true
     })
     initAutoComplete()
 
     number.shim(tablesort)
 
+    // issue event on expand and hide
+    
     // refresh sorting, once searched
     // sort.refresh();
 
