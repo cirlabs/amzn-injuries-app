@@ -11089,10 +11089,20 @@ _table.init = function (app) {
   Tablesort__WEBPACK_IMPORTED_MODULE_0___default()(table, {
     descending: true
   });
-  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a); // issue event on expand and hide
+  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a);
+
+  var resizeiFrame = function resizeiFrame() {
+    // because of the css animation
+    setTimeout(function () {
+      app.pymChild.sendHeight();
+    }, 600);
+    console.log("hola");
+  };
+
+  document.getElementById("show").addEventListener("click", resizeiFrame);
+  document.getElementById("hide").addEventListener("click", resizeiFrame); // issue event on expand and hide
   // refresh sorting, once searched
   // sort.refresh();
-  //   app.pymChild.sendHeight()
 
   _table.table = table;
 };

@@ -14,12 +14,23 @@ _table.init = (app) => {
   })
   number.shim(tablesort)
 
+  var resizeiFrame = function(){
+      // because of the css animation
+      setTimeout( function (){
+        app.pymChild.sendHeight()
+      }, 600)
+    
+    console.log("hola")
+  }
+
+  document.getElementById("show").addEventListener("click", resizeiFrame)
+  document.getElementById("hide").addEventListener("click", resizeiFrame)
+  
+  
   // issue event on expand and hide
   
   // refresh sorting, once searched
   // sort.refresh();
-
-//   app.pymChild.sendHeight()
 
   _table.table = table
 }
