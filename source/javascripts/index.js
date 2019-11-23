@@ -10643,7 +10643,9 @@ __webpack_require__.r(__webpack_exports__);
       app.pymChild.sendHeight();
     });
     var table = document.getElementById('table-sortable');
-    Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table);
+    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table, {
+      descending: true
+    });
     initAutoComplete(); // This should be a shim, or wrapped as a module
 
     tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // refresh sorting, once searched
@@ -10808,18 +10810,33 @@ var tooltipBody = function tooltipBody(feature) {
   sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip;
   content.appendChild(h);
   content.appendChild(sub);
-  content.appendChild(formatProperty('Uses robot', boolToString(feature.robots)));
+  content.appendChild(formatProperty('Uses robots', boolToString(feature.robots)));
 
   if (feature.valid === 1) {
     var deets = document.createElement('div');
     deets.classList.add('details');
     deets.appendChild(formatProperty('Injuries reported', feature.injuryCount));
     deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount));
-    deets.appendChild(formatProperty('TRIR', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
+    deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
     deets.appendChild(compareChart(toPrecision(feature.trir), META.trir));
-    deets.appendChild(formatProperty('DART', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
+    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart));
     content.appendChild(deets);
+  } else {
+    var _deets = document.createElement('p');
+
+    _deets.classList.add('contact');
+
+    _deets.innerText = 'We don\’t have the records for this warehouse. If you work or have worked at this warehouse, it\’s your right to get the injury records. Here\’s what you can do: ';
+    var a = document.createElement('a');
+    var linkText = document.createTextNode("https://www.revealnews.org/amazonrecords");
+    a.appendChild(linkText);
+    a.title = "Revealnews: Amazon records";
+    a.href = "https://www.revealnews.org/amazonrecords";
+
+    _deets.appendChild(a);
+
+    content.appendChild(_deets);
   }
 
   return content.outerHTML;

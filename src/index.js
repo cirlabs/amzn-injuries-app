@@ -47,8 +47,10 @@ import autocomplete from 'autocomplete'
         app.pymChild.sendHeight()
       })
 
-    let table = document.getElementById('table-sortable')
-    tablesort(table)
+    var table =  document.getElementById('table-sortable')
+    var sort = new tablesort(table, {
+      descending: true
+    })
     initAutoComplete()
 
     // This should be a shim, or wrapped as a module

@@ -1,49 +1,62 @@
-<section id="tableHolder">
-  <div id="table">
-    <table id="table-sortable" class="sort">
-      <thead>
+
+<a href="#show" class="show action" id="show"><span>Show all Amazon facilities</span></a>
+<a href="#hide" class="hide action" id="hide"><span>Hide</span></a>
+
+<div class="panel">
+
+  <table id="table-sortable" class="sort">
+    <thead>
+      <tr>
+        <th class="facility">Facility</th>
+        <th>Address</th>
+        <th>Serious Injury Rate for 2018</th>
+        <th data-sort-default>Number of Injuries for 2018</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% data.amazon.keys.each do |key| %>
+        <% f = data.amazon[key] %>
         <tr>
-          <th class="facility">Facility</th>
-          <th>Address</th>
-          <th>Total Injury Rate for 2018</th>
-          <th>Number of Serious Injuries for 2018</th>
-          <th data-sort-method='none'>Source(s) for Locations</th>
+          <td><%= key %></td>
+          <td><%= f["City"] %>, <%= f["State"] %> &mdash; <%= f["Zip Code"] %></td>
+
+          <% dart = f["Serious Injury Rate for 2018"] %>
+          <% roundedDart = dart.to_f.round(2) %>
+          <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
+          <td data-sort="<%= normalisedDart %>">
+            <span class="state-bar" style="width: calc(<%= normalisedDart %>/100 * 200%);">
+              <span <%= dart == "UNKNOWN" ? 'class="unknown"' : '' %>><%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %></span>
+            </span>
+          </td>
+
+          <% count = f["Number of Injuries for 2018"] %>
+          <% roundedCount = count.to_i %>
+          <% normalisedCountValue = count == "UNKNOWN" ? "0" : roundedCount %>
+          <td data-sort="<%= normalisedCountValue %>" >
+            <span class="state-bar" style="width: calc(<%= normalisedCountValue %>/500 * 100%);">  
+              <span <%= count == "UNKNOWN" ? 'class="unknown"' : '' %>><%= count == "UNKNOWN" ? "Unavailable" : roundedCount %></span>
+            </span>  
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <% data.amazon.keys.each do |key| %>
-          <% f = data.amazon[key] %>
-          <tr>
-            <td><%= key %></td>
-            <td><%= f["City"] %>, <%= f["State"] %>, <%= f["Zip Code"] %></td>
+      <% end %>
+      
+    </tbody>
+  </table>
 
-            <% dart = f["Total Injury Rate for 2018"] %>
-            <% roundedDart = dart.to_f.round(2) %>
-            <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
-            <td data-sort="<%= normalisedDart %>">
-              <span class="state-bar" style="width: calc(<%= normalisedDart %>/100 * 200%);">
-                <span><%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %></span>
-              </span>
-            </td>
+</div><!-- end panel -->
 
-            <% seriousCount = f["Number of Serious Injuries for 2018"] %>
-            <% roundedSeriousCount = seriousCount.to_i %>
-            <% normalisedCountValue = seriousCount == "UNKNOWN" ? "0" : roundedSeriousCount %>
-            <td data-sort="<%= normalisedCountValue %>" >
-              <span class="state-bar" style="width: calc(<%= normalisedCountValue %>/500 * 100%);">  
-                <span><%= seriousCount == "UNKNOWN" ? "Unavailable" : roundedSeriousCount %></span>
-              </span>  
-            </td>
+<div id="contact">
+  <p>We don’t have the records for some of these warehouses. If you work or have worked at this warehouse, it’s your right to get the injury records. Here’s what you can do: <a href="https://www.revealnews.org/amazonrecords" title="Revealnews: Amazon Records">https://www.revealnews.org/amazonrecords</a></p>
+</div>
 
-            <td data-sort-method='none'><%= f["Source(s) for Locations"] %></td>
-          </tr>
-        <% end %>
-        
-      </tbody>
-    </table>
-    <div id="contact-worker"><p>Did you work in this facility? Contact example@revealnews.org
-    to learn how you can request information</p></div>
-    <div id="contact"><p>Are we missing this facility? Contact example@revealnews.org to let us know.</p></div>
-   
-  </div>
-</section>
+<div id="sources">
+  <p>Sources For locations: <a href="http://www.mwpvl.com/html/amazon_com.html">MWPVL</a> and <a href="https://www.avalara.com/small-business/en/amazon-fulfillment-center-locations.html">Avalara</a> Source for injury data: Amazon, <a href="https://www.google.com/url?q=https://www.documentcloud.org/search/projectid:%2520%252246868-Amazon-Injury-Records%2522&sa=D&ust=1574468522756000&usg=AFQjCNHwRqcdffuRcwob1sefgCFUf1hfWA">current and former Amazon employees</a>, <a href="https://www.nycommunities.org/">New York Communities for Change</a>, and <a href="https://maketheroadny.org/">Make the Road New York</a></p>
+</div>
+
+
+
+
+
+
+
+
