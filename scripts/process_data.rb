@@ -38,7 +38,15 @@ def fix_val(val)
 end
 
 def fix_keys(obj)
-  obj.map {|k,v| [@reverse_key_lookup[k], fix_val(v)]}.to_h
+  obj.map do |k,v|
+    key = @reverse_key_lookup[k]
+    val = fix_val(v)
+    if key == 'zip'
+      val = val.to_s
+      val = '0' + val if val.length < 5
+    end
+    [key, val]
+  end.to_h
 end
 
 def to_feature(key, obj)
