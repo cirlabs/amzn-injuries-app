@@ -5,7 +5,6 @@ let inputEls
 let wordList
 let options
 let valueMap
-let state = 'noquery'
 
 const addEventListenerToCollection = function (collection, event, handler) {
   for (let i = 0; i < inputEls.length; i++) {
@@ -54,7 +53,6 @@ const closeAllLists = function (elmnt) {
           values: null
         }
       }))
-    state = 'focus'
     return
   }
 
@@ -107,7 +105,6 @@ const addItemsToList = function (items, val = null) {
     div.appendChild(noRes)
     // notify about invalid query
     console.log('no results: []')
-    state = 'noResults'
     inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
       {
         detail: {
