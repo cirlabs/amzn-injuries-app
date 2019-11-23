@@ -106,7 +106,6 @@ const setPopups = (map) => {
     closeOnClick: true
   })
   const showPopup = function (e) {
-    debugger
     e.originalEvent.stopPropagation()
     e.originalEvent.preventDefault()
     // Change the cursor style as a UI indicator.

@@ -10875,7 +10875,6 @@ var setPopups = function setPopups(map) {
   });
 
   var showPopup = function showPopup(e) {
-    debugger;
     e.originalEvent.stopPropagation();
     e.originalEvent.preventDefault(); // Change the cursor style as a UI indicator.
 
