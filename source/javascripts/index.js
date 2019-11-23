@@ -10851,6 +10851,10 @@ _map.setFilters = function (selectedIds) {
   });
 };
 
+_map.resetMap = function () {
+  this.setFilters(null);
+};
+
 var buildFilters = function buildFilters(selectedIds) {
   if (!selectedIds) {
     return [UNKNOWNS_FILTER, WAREHOUSE_FILTER];

@@ -85,6 +85,10 @@ _map.setFilters = function (selectedIds) {
   this.map.fitBounds(new mapboxgl.LngLatBounds(getBbox(selectedIds)), { padding: 20 })
 }
 
+_map.resetMap = function () {
+  this.setFilters(null)
+}
+
 const buildFilters = function (selectedIds) {
   if (!selectedIds) {
     return [UNKNOWNS_FILTER, WAREHOUSE_FILTER]
