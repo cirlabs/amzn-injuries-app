@@ -16,7 +16,6 @@ import autocomplete from 'autocomplete'
   const wireEvents = () => {}
 
   const handleSearchInput = (e) => {
-    console.log('search input', e.detail.values)
     app.filteredIdList = e.detail.values
     map.setFilters(app.filteredIdList)
 

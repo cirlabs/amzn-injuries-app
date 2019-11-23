@@ -76,6 +76,12 @@ _map.setFilters = function (selectedIds) {
   let filters = buildFilters(selectedIds)
   this.map.setFilter(UNKNOWNS_LAYER, filters[0])
   this.map.setFilter(WAREHOUSE_LAYER, filters[1])
+
+  if (selectedIds && selectedIds.length === 1) {
+    this.map.zoomTo(5)
+    this.map.setCenter(getCoordinates(selectedIds[0]))
+    return
+  }
   this.map.fitBounds(new mapboxgl.LngLatBounds(getBbox(selectedIds)), { padding: 20 })
 }
 
@@ -114,9 +120,9 @@ const setPopups = (map) => {
   }
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
-  // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
 
-  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {
@@ -215,6 +221,10 @@ const compareChart = function (curr, baseline) {
   return outerDiv
 }
 
+const getCoordinates = (id) => {
+  const feature = INCIDENTS.features.find((f) => f.properties.id === id)
+  return feature.geometry.coordinates
+}
 const getBbox = (selectedIds) => {
   if (!selectedIds || selectedIds.length === 0) {
     return DEFAULT_BBOX

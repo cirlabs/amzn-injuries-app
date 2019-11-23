@@ -45,8 +45,6 @@ const closeAllLists = function (elmnt) {
   // ignore if click is triggered on an inputEl
   if (elmnt && elmnt === _state.inputEl) {
     // reset state and raise event
-    // if (state === 'noResults') {
-    console.log('reset state event: null')
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged',
       {
         detail: {
@@ -71,7 +69,6 @@ const selectionHandler = function (e) {
   setValueInInput(e.target.innerText)
   closeAllLists()
   // selection made event
-  console.log('selected event for ', _state.query, ':', JSON.stringify(_state.valuesList[_state.query]))
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
     {
       query: _state.query,
@@ -123,7 +120,6 @@ const addItemsToList = function (matches, val = null) {
     noRes.classList = 'notfound'
     div.appendChild(noRes)
     // notify about invalid query
-    console.log('no results: []')
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged',
       {
         detail: {
@@ -138,14 +134,7 @@ const inputHandler = function (e) {
   _state.query = this.value
 
   if (!_state.query) {
-    console.log('query evaluates to false')
     closeAllLists()
-    // _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
-    //   {
-    //     query: _state.query,
-    //     values: null
-    //   }
-    // }))
     return
   }
 
@@ -187,7 +176,7 @@ const addActive = function (x) {
 
 const keyDownHandler = function (e) {
   let x = document.getElementById(this.id + '-autocomplete-list')
-  if (x) x = x.getElementsByTagName('div')
+  if (x) x = x.getElementsByClassName('item')
   if (e.keyCode === 40) {
     // If the arrow DOWN key is pressed, increase the currentFocus variable:
     _state.currentFocus++

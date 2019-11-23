@@ -9648,9 +9648,6 @@ var closeAllLists = function closeAllLists(elmnt) {
 
   if (elmnt && elmnt === _state.inputEl) {
     // reset state and raise event
-    // if (state === 'noResults') {
-    console.log('reset state event: null');
-
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
       detail: {
         query: '',
@@ -9694,8 +9691,6 @@ var selectionHandler = function selectionHandler(e) {
   _state.query = e.target.innerText;
   setValueInInput(e.target.innerText);
   closeAllLists(); // selection made event
-
-  console.log('selected event for ', _state.query, ':', JSON.stringify(_state.valuesList[_state.query]));
 
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
     detail: {
@@ -9787,8 +9782,6 @@ var addItemsToList = function addItemsToList(matches) {
     noRes.classList = 'notfound';
     div.appendChild(noRes); // notify about invalid query
 
-    console.log('no results: []');
-
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
       detail: {
         query: val,
@@ -9802,14 +9795,7 @@ var inputHandler = function inputHandler(e) {
   _state.query = this.value;
 
   if (!_state.query) {
-    console.log('query evaluates to false');
-    closeAllLists(); // _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
-    //   {
-    //     query: _state.query,
-    //     values: null
-    //   }
-    // }))
-
+    closeAllLists();
     return;
   }
 
@@ -9910,7 +9896,7 @@ var addActive = function addActive(x) {
 
 var keyDownHandler = function keyDownHandler(e) {
   var x = document.getElementById(this.id + '-autocomplete-list');
-  if (x) x = x.getElementsByTagName('div');
+  if (x) x = x.getElementsByClassName('item');
 
   if (e.keyCode === 40) {
     // If the arrow DOWN key is pressed, increase the currentFocus variable:
@@ -10725,7 +10711,6 @@ __webpack_require__.r(__webpack_exports__);
   var wireEvents = function wireEvents() {};
 
   var handleSearchInput = function handleSearchInput(e) {
-    console.log('search input', e.detail.values);
     app.filteredIdList = e.detail.values;
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map and table
   };
@@ -10854,6 +10839,13 @@ _map.setFilters = function (selectedIds) {
   var filters = buildFilters(selectedIds);
   this.map.setFilter(UNKNOWNS_LAYER, filters[0]);
   this.map.setFilter(WAREHOUSE_LAYER, filters[1]);
+
+  if (selectedIds && selectedIds.length === 1) {
+    this.map.zoomTo(5);
+    this.map.setCenter(getCoordinates(selectedIds[0]));
+    return;
+  }
+
   this.map.fitBounds(new mapboxgl.LngLatBounds(getBbox(selectedIds)), {
     padding: 20
   });
@@ -10894,8 +10886,9 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
-  map.on('mouseenter', UNKNOWNS_LAYER, showPopup); // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
-  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup);
+  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
 
 var toPrecision = function toPrecision(num) {
@@ -10998,6 +10991,13 @@ var compareChart = function compareChart(curr, baseline) {
   label.innerText = baseline.max;
   outerDiv.appendChild(label);
   return outerDiv;
+};
+
+var getCoordinates = function getCoordinates(id) {
+  var feature = INCIDENTS.features.find(function (f) {
+    return f.properties.id === id;
+  });
+  return feature.geometry.coordinates;
 };
 
 var getBbox = function getBbox(selectedIds) {
