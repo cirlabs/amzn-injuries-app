@@ -8,6 +8,9 @@ const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDz
 const STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus'
 const WAREHOUSE_LAYER = 'warehouses'
 const UNKNOWNS_LAYER = 'unknowns'
+const WAREHOUSE_FILTER = ['==', 'valid', 1]
+const UNKNOWNS_FILTER = ['==', 'valid', 0]
+const HIDE_ALL = ['==', 'valid', 3]
 const STEP_COUNT = 10
 const COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
 
@@ -71,22 +74,20 @@ _map.init = () => {
 }
 
 _map.setFilters = function (selectedIds) {
-  let filter = buildFilter(selectedIds)
-  if (filter.length === 0) {
-    this.map.setFilter(UNKNOWNS_LAYER, ['==', 'valid', 0])
-    this.map.setFilter(WAREHOUSE_LAYER, ['==', 'valid', 1])
-  }
-  this.map.setFilter(UNKNOWNS_LAYER,
-    ['all', ['==', 'valid', 0], filter])
-  this.map.setFilter(WAREHOUSE_LAYER,
-    ['all', ['==', 'valid', 1], filter])
+  let filters = buildFilters(selectedIds)
+  this.map.setFilter(UNKNOWNS_LAYER, filters[0])
+  this.map.setFilter(WAREHOUSE_LAYER, filters[1])
 }
 
-const buildFilter = function (selectedIds) {
-  if (!selectedIds || selectedIds.length === 0) {
-    return []
+const buildFilters = function (selectedIds) {
+  if (!selectedIds) {
+    return [UNKNOWNS_FILTER, WAREHOUSE_FILTER]
   }
-  return ['in', 'id'].concat(selectedIds)
+  if (selectedIds.length === 0) {
+    return [HIDE_ALL, HIDE_ALL]
+  }
+  let clause = ['in', 'id'].concat(selectedIds)
+  return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]]
 }
 
 const setPopups = (map) => {
@@ -161,15 +162,15 @@ const tooltipBody = function (feature) {
   } else {
     let deets = document.createElement('p')
     deets.classList.add('contact')
-    deets.innerText = 'We don\’t have the records for this warehouse. If you work or have worked at this warehouse, it\’s your right to get the injury records. Here\’s what you can do: '
-    
-    var a = document.createElement('a');
-    var linkText = document.createTextNode("https://www.revealnews.org/amazonrecords");
-    a.appendChild(linkText);
-    a.title = "Revealnews: Amazon records";
-    a.href = "https://www.revealnews.org/amazonrecords";
-    deets.appendChild(a);
-  
+    deets.innerText = 'We don’t have the records for this warehouse. If you work or have worked at this warehouse, it’s your right to get the injury records. Here’s what you can do:'
+
+    let a = document.createElement('a')
+    let linkText = document.createTextNode('https://www.revealnews.org/amazonrecords')
+    a.appendChild(linkText)
+    a.title = 'Revealnews: Amazon records'
+    a.href = 'https://www.revealnews.org/amazonrecords'
+    deets.appendChild(a)
+
     content.appendChild(deets)
   }
   return content.outerHTML

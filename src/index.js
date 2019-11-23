@@ -18,9 +18,6 @@ import autocomplete from 'autocomplete'
   const handleSearchInput = (e) => {
     console.log('search input')
     app.filteredIdList = e.detail.values
-    if (!app.filteredIdList) {
-      app.filteredIdList = null
-    }
     map.setFilters(app.filteredIdList)
 
     // TODO: add handlers for map and table

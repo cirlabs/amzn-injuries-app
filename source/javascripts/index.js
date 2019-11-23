@@ -9614,6 +9614,7 @@ var inputEls;
 var wordList;
 var options;
 var valueMap;
+var state = 'noquery';
 
 var addEventListenerToCollection = function addEventListenerToCollection(collection, event, handler) {
   for (var i = 0; i < inputEls.length; i++) {
@@ -9651,6 +9652,16 @@ var closeAllLists = function closeAllLists(elmnt) {
   var x = document.getElementsByClassName('autocomplete-items'); // ignore if click is triggered on an inputEl
 
   if (elmnt && utils__WEBPACK_IMPORTED_MODULE_0__["default"].collectionContains(inputEls, elmnt)) {
+    // reset state and raise event
+    // if (state === 'noResults') {
+    console.log('reset state event: null');
+    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+      detail: {
+        query: '',
+        values: null
+      }
+    }));
+    state = 'focus';
     return;
   }
 
@@ -9686,8 +9697,9 @@ var closeAllLists = function closeAllLists(elmnt) {
 var selectionHandler = function selectionHandler(e) {
   var query = this.getElementsByTagName('input')[0].value;
   setValueInInputs(inputEls, query);
-  closeAllLists();
-  console.log('here', query, valueMap[query]);
+  closeAllLists(); // selection made event
+
+  console.log('selected event for ', query, ':', JSON.stringify(valueMap[query]));
   inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
     detail: {
       query: query,
@@ -9737,7 +9749,16 @@ var addItemsToList = function addItemsToList(items) {
     var noRes = document.createElement('div');
     noRes.innerHTML = 'No matching Amazon warehouse found.';
     noRes.classList = 'notfound';
-    div.appendChild(noRes);
+    div.appendChild(noRes); // notify about invalid query
+
+    console.log('no results: []');
+    state = 'noResults';
+    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+      detail: {
+        query: val,
+        values: []
+      }
+    }));
   }
 };
 
@@ -9745,7 +9766,14 @@ var inputHandler = function inputHandler(e) {
   var val = this.value;
 
   if (!val) {
-    closeAllLists();
+    closeAllLists(); // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+    //   {
+    //     detail: {
+    //       query: val,
+    //       values: null
+    //     }
+    //   }))
+
     return;
   }
 
@@ -9874,7 +9902,7 @@ _autocomplete.init = function (inputs, words) {
   addEventListenerToCollection(inputs, 'queryChanged', options.queryChangeHandler);
 };
 
-_autocomplete.setCity = function (query) {
+_autocomplete.setQuery = function (query) {
   setValueInInputs(inputEls, query);
 };
 
@@ -10614,11 +10642,6 @@ __webpack_require__.r(__webpack_exports__);
   var handleSearchInput = function handleSearchInput(e) {
     console.log('search input');
     app.filteredIdList = e.detail.values;
-
-    if (!app.filteredIdList) {
-      app.filteredIdList = null;
-    }
-
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map and table
   };
 
@@ -10680,6 +10703,9 @@ var TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3
 var STYLE = 'mapbox://styles/cir/ck372mcpu087g1cp8olbifhus';
 var WAREHOUSE_LAYER = 'warehouses';
 var UNKNOWNS_LAYER = 'unknowns';
+var WAREHOUSE_FILTER = ['==', 'valid', 1];
+var UNKNOWNS_FILTER = ['==', 'valid', 0];
+var HIDE_ALL = ['==', 'valid', 3];
 var STEP_COUNT = 10;
 var COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a'];
 mapboxgl.accessToken = TOKEN;
@@ -10739,23 +10765,22 @@ _map.init = function () {
 };
 
 _map.setFilters = function (selectedIds) {
-  var filter = buildFilter(selectedIds);
-
-  if (filter.length === 0) {
-    this.map.setFilter(UNKNOWNS_LAYER, ['==', 'valid', 0]);
-    this.map.setFilter(WAREHOUSE_LAYER, ['==', 'valid', 1]);
-  }
-
-  this.map.setFilter(UNKNOWNS_LAYER, ['all', ['==', 'valid', 0], filter]);
-  this.map.setFilter(WAREHOUSE_LAYER, ['all', ['==', 'valid', 1], filter]);
+  var filters = buildFilters(selectedIds);
+  this.map.setFilter(UNKNOWNS_LAYER, filters[0]);
+  this.map.setFilter(WAREHOUSE_LAYER, filters[1]);
 };
 
-var buildFilter = function buildFilter(selectedIds) {
-  if (!selectedIds || selectedIds.length === 0) {
-    return [];
+var buildFilters = function buildFilters(selectedIds) {
+  if (!selectedIds) {
+    return [UNKNOWNS_FILTER, WAREHOUSE_FILTER];
   }
 
-  return ['in', 'id'].concat(selectedIds);
+  if (selectedIds.length === 0) {
+    return [HIDE_ALL, HIDE_ALL];
+  }
+
+  var clause = ['in', 'id'].concat(selectedIds);
+  return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]];
 };
 
 var setPopups = function setPopups(map) {
@@ -10827,12 +10852,12 @@ var tooltipBody = function tooltipBody(feature) {
 
     _deets.classList.add('contact');
 
-    _deets.innerText = 'We don\’t have the records for this warehouse. If you work or have worked at this warehouse, it\’s your right to get the injury records. Here\’s what you can do: ';
+    _deets.innerText = 'We don’t have the records for this warehouse. If you work or have worked at this warehouse, it’s your right to get the injury records. Here’s what you can do:';
     var a = document.createElement('a');
-    var linkText = document.createTextNode("https://www.revealnews.org/amazonrecords");
+    var linkText = document.createTextNode('https://www.revealnews.org/amazonrecords');
     a.appendChild(linkText);
-    a.title = "Revealnews: Amazon records";
-    a.href = "https://www.revealnews.org/amazonrecords";
+    a.title = 'Revealnews: Amazon records';
+    a.href = 'https://www.revealnews.org/amazonrecords';
 
     _deets.appendChild(a);
 

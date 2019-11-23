@@ -5,6 +5,7 @@ let inputEls
 let wordList
 let options
 let valueMap
+let state = 'noquery'
 
 const addEventListenerToCollection = function (collection, event, handler) {
   for (let i = 0; i < inputEls.length; i++) {
@@ -43,6 +44,17 @@ const closeAllLists = function (elmnt) {
 
   // ignore if click is triggered on an inputEl
   if (elmnt && utils.collectionContains(inputEls, elmnt)) {
+    // reset state and raise event
+    // if (state === 'noResults') {
+    console.log('reset state event: null')
+    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+      {
+        detail: {
+          query: '',
+          values: null
+        }
+      }))
+    state = 'focus'
     return
   }
 
@@ -59,7 +71,8 @@ const selectionHandler = function (e) {
   const query = this.getElementsByTagName('input')[0].value
   setValueInInputs(inputEls, query)
   closeAllLists()
-  console.log('here', query, valueMap[query]);
+  // selection made event
+  console.log('selected event for ', query, ':', JSON.stringify(valueMap[query]))
   inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', { detail:
     {
       query: query,
@@ -92,6 +105,16 @@ const addItemsToList = function (items, val = null) {
     noRes.innerHTML = 'No matching Amazon warehouse found.'
     noRes.classList = 'notfound'
     div.appendChild(noRes)
+    // notify about invalid query
+    console.log('no results: []')
+    state = 'noResults'
+    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+      {
+        detail: {
+          query: val,
+          values: []
+        }
+      }))
   }
 }
 
@@ -99,6 +122,13 @@ const inputHandler = function (e) {
   let val = this.value
   if (!val) {
     closeAllLists()
+    // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+    //   {
+    //     detail: {
+    //       query: val,
+    //       values: null
+    //     }
+    //   }))
     return
   }
 
@@ -188,7 +218,7 @@ _autocomplete.init = function (inputs, words, optionsOverrides = {}) {
   addEventListenerToCollection(inputs, 'queryChanged', options.queryChangeHandler)
 }
 
-_autocomplete.setCity = function (query) {
+_autocomplete.setQuery = function (query) {
   setValueInInputs(inputEls, query)
 }
 
