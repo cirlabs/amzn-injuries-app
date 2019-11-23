@@ -10941,14 +10941,18 @@ var tooltipBody = function tooltipBody(feature) {
 
     _deets.classList.add('contact');
 
-    _deets.innerText = 'We don’t have the records for this warehouse. If you work or have worked at this warehouse, it’s your right to get the injury records. Here’s what you can do:';
+    _deets.innerText = 'We don\’t have the records. If you work or have worked here, ';
     var a = document.createElement('a');
-    var linkText = document.createTextNode('https://www.revealnews.org/amazonrecords');
+    var linkText = document.createTextNode('here');
     a.appendChild(linkText);
     a.title = 'Revealnews: Amazon records';
     a.href = 'https://www.revealnews.org/amazonrecords';
 
     _deets.appendChild(a);
+
+    var text = document.createTextNode('\'s how you can get the records.');
+
+    _deets.appendChild(text);
 
     content.appendChild(_deets);
   }

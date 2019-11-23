@@ -177,15 +177,17 @@ const tooltipBody = function (feature) {
   } else {
     let deets = document.createElement('p')
     deets.classList.add('contact')
-    deets.innerText = 'We don’t have the records for this warehouse. If you work or have worked at this warehouse, it’s your right to get the injury records. Here’s what you can do:'
+    deets.innerText = 'We don\’t have the records. If you work or have worked here, '
 
     let a = document.createElement('a')
-    let linkText = document.createTextNode('https://www.revealnews.org/amazonrecords')
+    let linkText = document.createTextNode('here')
     a.appendChild(linkText)
     a.title = 'Revealnews: Amazon records'
     a.href = 'https://www.revealnews.org/amazonrecords'
     deets.appendChild(a)
 
+    let text = document.createTextNode('\'s how you can get the records.')
+    deets.appendChild(text)
     content.appendChild(deets)
   }
   return content.outerHTML
