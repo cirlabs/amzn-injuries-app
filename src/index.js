@@ -16,7 +16,7 @@ import autocomplete from 'autocomplete'
   const wireEvents = () => {}
 
   const handleSearchInput = (e) => {
-    console.log('search input')
+    console.log('search input', e.detail.values)
     app.filteredIdList = e.detail.values
     map.setFilters(app.filteredIdList)
 
@@ -24,7 +24,7 @@ import autocomplete from 'autocomplete'
   }
 
   const initAutoComplete = () => {
-    let searchBars = document.getElementsByClassName('autocomplete')
+    let searchBars = document.getElementById('autocomplete')
     autocomplete.init(searchBars, SEARCH_TERMS, {
       queryChangeHandler: handleSearchInput
     })
@@ -44,8 +44,8 @@ import autocomplete from 'autocomplete'
         app.pymChild.sendHeight()
       })
 
-    var table =  document.getElementById('table-sortable')
-    var sort = new tablesort(table, {
+    let table = document.getElementById('table-sortable')
+    tablesort(table, {
       descending: true
     })
     initAutoComplete()

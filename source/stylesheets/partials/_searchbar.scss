@@ -1,4 +1,45 @@
 #searchBar {
+  display: flex;
   margin: 20px;
+  flex-direction: column;
+  position: relative;
+
+  .autocomplete-items {
+    position: absolute;
+    border: 2px solid $light-grey;
+    border-top: none;
+    width: 100%;
+    z-index: 99;
+    top: 100%;
+    background: $white;
+
+    div.divider {
+      padding: 3px 5px;
+      text-transform: uppercase;
+      background-color: $light-grey;
+      font-size: 12px;
+    }
+
+    div.item {
+      padding: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 1px solid $light-grey;
+
+      &.autocomplete-active,
+      &:hover {
+        background-color: rgba($reveal-orange, 0.4);
+      }
+    }
+  }
+}
+
+#autocomplete {
+  width: 100%;
+  margin: 0 3px;
   border: 1px solid;
+}
+
+span.highlight {
+  background-color: $highlight-yellow;
 }

@@ -9609,59 +9609,55 @@ try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils */ "./src/utils.js");
 
-var currentFocus;
-var inputEls;
-var wordList;
-var options;
-var valueMap;
-var state = 'noquery';
+var _state = {
+  options: {},
+  currentFocus: null,
+  query: '',
+  valuesList: {},
+  wordLists: {},
+  categories: [],
+  inputEl: null
+}; // const addEventListenerToCollection = function (collection, event, handler) {
+//   for (let i = 0; i < inputEls.length; i++) {
+//     collection.item(i).addEventListener(event, handler)
+//   }
+// }
 
-var addEventListenerToCollection = function addEventListenerToCollection(collection, event, handler) {
-  for (var i = 0; i < inputEls.length; i++) {
-    collection.item(i).addEventListener(event, handler);
-  }
-};
-
-var setValueInInputs = function setValueInInputs(collection, value) {
-  for (var i = 0; i < inputEls.length; i++) {
-    collection.item(i).value = value;
-  }
+var setValueInInput = function setValueInInput(value) {
+  _state.query = value;
+  _state.inputEl.value = _state.query;
 };
 
 var setValidValue = function setValidValue() {
-  var currVal = inputEls.item(0).value;
-  var allVals = true;
-
-  for (var i = 1; i < inputEls.length; i++) {
-    allVals = allVals && inputEls.item(i).value === currVal;
-  }
-
-  if (!allVals || !wordList.includes(currVal)) {
-    currVal = window.app.searchQuery;
-    setValueInInputs(inputEls, currVal);
-  } // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+  // let currVal = _state.query
+  // let allVals = true
+  _state.inputEl.value = _state.query; // if (!allVals || !wordList.includes(currVal)) {
+  //   currVal = window.app.searchQuery
+  //   setValueInInputs(inputEls, currVal)
+  // }
+  // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
   //   { detail: {
   //     query: currVal,
   //     values: valueMap[currVal]
   //   }
   //   }))
-
 };
 
 var closeAllLists = function closeAllLists(elmnt) {
   var x = document.getElementsByClassName('autocomplete-items'); // ignore if click is triggered on an inputEl
 
-  if (elmnt && utils__WEBPACK_IMPORTED_MODULE_0__["default"].collectionContains(inputEls, elmnt)) {
+  if (elmnt && elmnt === _state.inputEl) {
     // reset state and raise event
     // if (state === 'noResults') {
     console.log('reset state event: null');
-    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+
+    _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
       detail: {
         query: '',
         values: null
       }
     }));
-    state = 'focus';
+
     return;
   }
 
@@ -9695,40 +9691,80 @@ var closeAllLists = function closeAllLists(elmnt) {
 };
 
 var selectionHandler = function selectionHandler(e) {
-  var query = this.getElementsByTagName('input')[0].value;
-  setValueInInputs(inputEls, query);
+  _state.query = e.target.innerText;
+  setValueInInput(e.target.innerText);
   closeAllLists(); // selection made event
 
-  console.log('selected event for ', query, ':', JSON.stringify(valueMap[query]));
-  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+  console.log('selected event for ', _state.query, ':', JSON.stringify(_state.valuesList[_state.query]));
+
+  _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
     detail: {
-      query: query,
-      values: valueMap[query]
+      query: _state.query,
+      values: _state.valuesList[_state.query]
     }
   }));
 };
 
-var addItemsToList = function addItemsToList(items) {
+var addItemsToList = function addItemsToList(matches) {
   var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   closeAllLists();
-  currentFocus = -1; // create a div element that will contain the items (values):
+  _state.currentFocus = -1; // create a div element that will contain the items (values):
 
   var div = document.createElement('div');
   div.setAttribute('id', this.id + '-autocomplete-list');
   div.setAttribute('class', 'autocomplete-items');
   this.parentNode.appendChild(div);
+  var totalMatchesCount = 0;
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
 
   try {
-    for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var el = _step2.value;
-      var opt = document.createElement('div');
-      opt.innerHTML = "".concat(utils__WEBPACK_IMPORTED_MODULE_0__["default"].wrapSubstring(el, val), "\n      <input type='hidden' value='").concat(el, "'>"); // handle selection
+    for (var _iterator2 = _state.categories[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var cat = _step2.value;
+      var items = matches[cat];
 
-      opt.addEventListener('click', selectionHandler);
-      div.appendChild(opt);
+      if (!items || items.length === 0) {
+        continue;
+      } else {
+        totalMatchesCount += items.count;
+        var opt = document.createElement('div');
+        opt.classList.add('divider');
+        opt.innerHTML = cat;
+        div.appendChild(opt);
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = items[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var el = _step3.value;
+
+            var _opt = document.createElement('div');
+
+            _opt.classList.add('item');
+
+            _opt.innerHTML = "".concat(utils__WEBPACK_IMPORTED_MODULE_0__["default"].wrapSubstring(el, val), "\n          <input type='hidden' value='").concat(el, "'>"); // handle selection
+
+            _opt.addEventListener('click', selectionHandler);
+
+            div.appendChild(_opt);
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+              _iterator3["return"]();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+      }
     }
   } catch (err) {
     _didIteratorError2 = true;
@@ -9745,15 +9781,15 @@ var addItemsToList = function addItemsToList(items) {
     }
   }
 
-  if (!items || items.length === 0) {
+  if (totalMatchesCount === 0) {
     var noRes = document.createElement('div');
     noRes.innerHTML = 'No matching Amazon warehouse found.';
     noRes.classList = 'notfound';
     div.appendChild(noRes); // notify about invalid query
 
     console.log('no results: []');
-    state = 'noResults';
-    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', {
+
+    _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
       detail: {
         query: val,
         values: []
@@ -9763,66 +9799,60 @@ var addItemsToList = function addItemsToList(items) {
 };
 
 var inputHandler = function inputHandler(e) {
-  var val = this.value;
+  _state.query = this.value;
 
-  if (!val) {
-    closeAllLists(); // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+  if (!_state.query) {
+    console.log('query evaluates to false');
+    closeAllLists(); // _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
     //   {
-    //     detail: {
-    //       query: val,
-    //       values: null
-    //     }
-    //   }))
+    //     query: _state.query,
+    //     values: null
+    //   }
+    // }))
 
     return;
   }
 
-  var matches = []; // for each item in the array...
+  var matches = {}; // for each item in the array...
 
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
-
-  try {
-    for (var _iterator3 = wordList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var el = _step3.value;
-
-      if (matches.length === options.maxItems) {
-        break;
-      }
-
-      if (el.toUpperCase().includes(val.toUpperCase())) {
-        matches.push(el);
-      }
-    }
-  } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-        _iterator3["return"]();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
-  }
-
-  addItemsToList.bind(this)(matches, val);
-};
-
-var removeActive = function removeActive(x) {
-  // a function to remove the 'active' class from all autocomplete items:
   var _iteratorNormalCompletion4 = true;
   var _didIteratorError4 = false;
   var _iteratorError4 = undefined;
 
   try {
-    for (var _iterator4 = x[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-      var el = _step4.value;
-      el.classList.remove('autocomplete-active');
+    for (var _iterator4 = _state.categories[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var cat = _step4.value;
+      matches[cat] = [];
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = _state.wordLists[cat][Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var el = _step5.value;
+
+          if (matches[cat].length === _state.options.maxItems) {
+            break;
+          }
+
+          if (el.toUpperCase().includes(_state.query.toUpperCase())) {
+            matches[cat].push(el);
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+            _iterator5["return"]();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
     }
   } catch (err) {
     _didIteratorError4 = true;
@@ -9838,10 +9868,40 @@ var removeActive = function removeActive(x) {
       }
     }
   }
+
+  addItemsToList.bind(this)(matches, _state.query);
+};
+
+var removeActive = function removeActive(x) {
+  // a function to remove the 'active' class from all autocomplete items:
+  var _iteratorNormalCompletion6 = true;
+  var _didIteratorError6 = false;
+  var _iteratorError6 = undefined;
+
+  try {
+    for (var _iterator6 = x[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      var el = _step6.value;
+      el.classList.remove('autocomplete-active');
+    }
+  } catch (err) {
+    _didIteratorError6 = true;
+    _iteratorError6 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+        _iterator6["return"]();
+      }
+    } finally {
+      if (_didIteratorError6) {
+        throw _iteratorError6;
+      }
+    }
+  }
 };
 
 var addActive = function addActive(x) {
   if (!x) return false;
+  var currentFocus = _state.currentFocus;
   removeActive(x);
   if (currentFocus >= x.length) currentFocus = 0;
   if (currentFocus < 0) currentFocus = x.length - 1;
@@ -9854,57 +9914,82 @@ var keyDownHandler = function keyDownHandler(e) {
 
   if (e.keyCode === 40) {
     // If the arrow DOWN key is pressed, increase the currentFocus variable:
-    currentFocus++; // and and make the current item more visible:
+    _state.currentFocus++; // and and make the current item more visible:
 
     addActive(x);
   } else if (e.keyCode === 38) {
     // up
     // If the arrow UP key is pressed, decrease the currentFocus variable:
-    currentFocus--; // and and make the current item more visible:
+    _state.currentFocus--; // and and make the current item more visible:
 
     addActive(x);
   } else if (e.keyCode === 13) {
     e.preventDefault();
 
-    if (currentFocus > -1) {
-      if (x) x[currentFocus].click();
+    if (_state.currentFocus > -1) {
+      if (x) x[_state.currentFocus].click();
     }
   }
-};
+}; // clicks text box
+
 
 var clickHandler = function clickHandler(elmnt) {
   this.value = null;
+  _state.query = null;
   inputHandler.bind(this)(elmnt);
 };
 
 var _autocomplete = {};
 
-_autocomplete.init = function (inputs, words) {
+_autocomplete.init = function (input, words) {
   var optionsOverrides = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var defaultOptions = {
-    maxItems: 10,
+    maxItems: 5,
     queryChangeHandler: null
   };
-  options = Object.assign(defaultOptions, optionsOverrides);
-  inputEls = inputs;
-  wordList = Object.keys(words);
-  valueMap = words; // handle click to dropdown
+  _state.options = Object.assign(defaultOptions, optionsOverrides);
+  _state.inputEl = input;
+  _state.categories = Object.keys(words);
+  var _iteratorNormalCompletion7 = true;
+  var _didIteratorError7 = false;
+  var _iteratorError7 = undefined;
 
-  addEventListenerToCollection(inputs, 'click', clickHandler); // Handle input to the text box
+  try {
+    for (var _iterator7 = _state.categories[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+      var k = _step7.value;
+      _state.wordLists[k] = Object.keys(words[k]).sort();
+      Object.assign(_state.valuesList, words[k]);
+    } // handle click to dropdown
 
-  addEventListenerToCollection(inputs, 'input', inputHandler); // handle keyboard nav
+  } catch (err) {
+    _didIteratorError7 = true;
+    _iteratorError7 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+        _iterator7["return"]();
+      }
+    } finally {
+      if (_didIteratorError7) {
+        throw _iteratorError7;
+      }
+    }
+  }
 
-  addEventListenerToCollection(inputs, 'keydown', keyDownHandler); // handle click away from autocompletes
+  input.addEventListener('click', clickHandler); // Handle input to the text box
+
+  input.addEventListener('input', inputHandler); // handle keyboard nav
+
+  input.addEventListener('keydown', keyDownHandler);
+  input.addEventListener('queryChanged', _state.options.queryChangeHandler); // handle click away from autocompletes
 
   document.addEventListener('click', function (e) {
     closeAllLists(e.target);
   });
-  addEventListenerToCollection(inputs, 'queryChanged', options.queryChangeHandler);
-};
+}; // _autocomplete.setQuery = function (query) {
+//   setValueInInputs(inputEls, query)
+// }
 
-_autocomplete.setQuery = function (query) {
-  setValueInInputs(inputEls, query);
-};
 
 /* harmony default export */ __webpack_exports__["default"] = (_autocomplete);
 
@@ -10640,13 +10725,13 @@ __webpack_require__.r(__webpack_exports__);
   var wireEvents = function wireEvents() {};
 
   var handleSearchInput = function handleSearchInput(e) {
-    console.log('search input');
+    console.log('search input', e.detail.values);
     app.filteredIdList = e.detail.values;
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map and table
   };
 
   var initAutoComplete = function initAutoComplete() {
-    var searchBars = document.getElementsByClassName('autocomplete');
+    var searchBars = document.getElementById('autocomplete');
     autocomplete__WEBPACK_IMPORTED_MODULE_154__["default"].init(searchBars, SEARCH_TERMS, {
       queryChangeHandler: handleSearchInput
     });
@@ -10666,7 +10751,7 @@ __webpack_require__.r(__webpack_exports__);
       app.pymChild.sendHeight();
     });
     var table = document.getElementById('table-sortable');
-    var sort = new Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a(table, {
+    Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table, {
       descending: true
     });
     initAutoComplete(); // This should be a shim, or wrapped as a module
@@ -10707,15 +10792,16 @@ var WAREHOUSE_FILTER = ['==', 'valid', 1];
 var UNKNOWNS_FILTER = ['==', 'valid', 0];
 var HIDE_ALL = ['==', 'valid', 3];
 var STEP_COUNT = 10;
+var DEFAULT_BBOX = [[-122.8, 25], [-69.5, 48.8]];
 var COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a'];
 mapboxgl.accessToken = TOKEN;
 
 _map.init = function () {
-  var bounds = new mapboxgl.LngLatBounds([[-122.8, 25], [-69.5, 48.8]]);
+  var bounds = new mapboxgl.LngLatBounds(DEFAULT_BBOX);
   var map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    maxZoom: 5,
+    maxZoom: 6,
     bounds: bounds,
     fitBoundsOptions: {
       padding: 20
@@ -10768,6 +10854,9 @@ _map.setFilters = function (selectedIds) {
   var filters = buildFilters(selectedIds);
   this.map.setFilter(UNKNOWNS_LAYER, filters[0]);
   this.map.setFilter(WAREHOUSE_LAYER, filters[1]);
+  this.map.fitBounds(new mapboxgl.LngLatBounds(getBbox(selectedIds)), {
+    padding: 20
+  });
 };
 
 var buildFilters = function buildFilters(selectedIds) {
@@ -10791,7 +10880,8 @@ var setPopups = function setPopups(map) {
 
   var showPopup = function showPopup(e) {
     // Change the cursor style as a UI indicator.
-    map.getCanvas().style.cursor = 'pointer';
+    map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
+
     var feature = e.features[0].properties; // Populate the popup and set its coordinates
     // based on the feature found.
 
@@ -10804,8 +10894,8 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
-  map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
-  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
+  map.on('mouseenter', UNKNOWNS_LAYER, showPopup); // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
+  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 };
 
 var toPrecision = function toPrecision(num) {
@@ -10908,20 +10998,46 @@ var compareChart = function compareChart(curr, baseline) {
   label.innerText = baseline.max;
   outerDiv.appendChild(label);
   return outerDiv;
-}; // const filterData = function (data, validOnly) {
-//   let filterfx = (f) => typeof f.properties.injuryCount !== 'string'
-//   if (!validOnly) {
-//     filterfx = (f) => typeof f.properties.injuryCount === 'string'
-//   }
-//   let clonedData = JSON.parse(JSON.stringify(data))
-//   clonedData.features = clonedData.features.filter(filterfx)
-//     .map((f) => {
-//       f.valid = validOnly
-//       return f
-//     })
-//   return clonedData
-// }
+};
 
+var getBbox = function getBbox(selectedIds) {
+  if (!selectedIds || selectedIds.length === 0) {
+    return DEFAULT_BBOX;
+  }
+
+  var features = INCIDENTS.features.filter(function (f) {
+    return selectedIds.includes(f.properties.id);
+  });
+  var lats = [];
+  var lngs = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = features[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var f = _step.value;
+      var coords = f.geometry.coordinates;
+      lngs.push(coords[0]);
+      lats.push(coords[1]);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return [[Math.min.apply(Math, lngs), Math.min.apply(Math, lats)], [Math.max.apply(Math, lngs), Math.max.apply(Math, lats)]];
+};
 
 var boolToString = function boolToString(bool) {
   if (typeof bool !== 'boolean') {
@@ -11000,7 +11116,7 @@ var utils = {};
 utils.wrapSubstring = function (str, substr, before, after) {
   var i = str.toUpperCase().indexOf(substr.toUpperCase());
   var l = substr.length;
-  before = before || "<span class='yellow-bg black-fg'>";
+  before = before || "<span class='highlight'>";
   after = after || '</span>';
   return "".concat(str.substr(0, i)).concat(before).concat(str.substr(i, l)).concat(after).concat(str.substr(i + l));
 };

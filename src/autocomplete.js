@@ -1,35 +1,36 @@
 import utils from 'utils'
 
-let currentFocus
-let inputEls
-let wordList
-let options
-let valueMap
-
-const addEventListenerToCollection = function (collection, event, handler) {
-  for (let i = 0; i < inputEls.length; i++) {
-    collection.item(i).addEventListener(event, handler)
-  }
+const _state = {
+  options: {},
+  currentFocus: null,
+  query: '',
+  valuesList: {},
+  wordLists: {},
+  categories: [],
+  inputEl: null
 }
 
-const setValueInInputs = function (collection, value) {
-  for (let i = 0; i < inputEls.length; i++) {
-    collection.item(i).value = value
-  }
+// const addEventListenerToCollection = function (collection, event, handler) {
+//   for (let i = 0; i < inputEls.length; i++) {
+//     collection.item(i).addEventListener(event, handler)
+//   }
+// }
+
+const setValueInInput = function (value) {
+  _state.query = value
+  _state.inputEl.value = _state.query
 }
 
 const setValidValue = function () {
-  let currVal = inputEls.item(0).value
-  let allVals = true
+  // let currVal = _state.query
+  // let allVals = true
 
-  for (let i = 1; i < inputEls.length; i++) {
-    allVals = allVals && inputEls.item(i).value === currVal
-  }
+  _state.inputEl.value = _state.query
 
-  if (!allVals || !wordList.includes(currVal)) {
-    currVal = window.app.searchQuery
-    setValueInInputs(inputEls, currVal)
-  }
+  // if (!allVals || !wordList.includes(currVal)) {
+  //   currVal = window.app.searchQuery
+  //   setValueInInputs(inputEls, currVal)
+  // }
   // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
   //   { detail: {
   //     query: currVal,
@@ -42,11 +43,11 @@ const closeAllLists = function (elmnt) {
   let x = document.getElementsByClassName('autocomplete-items')
 
   // ignore if click is triggered on an inputEl
-  if (elmnt && utils.collectionContains(inputEls, elmnt)) {
+  if (elmnt && elmnt === _state.inputEl) {
     // reset state and raise event
     // if (state === 'noResults') {
     console.log('reset state event: null')
-    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+    _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged',
       {
         detail: {
           query: '',
@@ -66,22 +67,22 @@ const closeAllLists = function (elmnt) {
 }
 
 const selectionHandler = function (e) {
-  const query = this.getElementsByTagName('input')[0].value
-  setValueInInputs(inputEls, query)
+  _state.query = e.target.innerText
+  setValueInInput(e.target.innerText)
   closeAllLists()
   // selection made event
-  console.log('selected event for ', query, ':', JSON.stringify(valueMap[query]))
-  inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged', { detail:
+  console.log('selected event for ', _state.query, ':', JSON.stringify(_state.valuesList[_state.query]))
+  _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
     {
-      query: query,
-      values: valueMap[query]
+      query: _state.query,
+      values: _state.valuesList[_state.query]
     }
   }))
 }
 
-const addItemsToList = function (items, val = null) {
+const addItemsToList = function (matches, val = null) {
   closeAllLists()
-  currentFocus = -1
+  _state.currentFocus = -1
 
   // create a div element that will contain the items (values):
   const div = document.createElement('div')
@@ -89,23 +90,41 @@ const addItemsToList = function (items, val = null) {
   div.setAttribute('class', 'autocomplete-items')
   this.parentNode.appendChild(div)
 
-  for (let el of items) {
-    const opt = document.createElement('div')
-    opt.innerHTML = `${utils.wrapSubstring(el, val)}
-      <input type='hidden' value='${el}'>`
+  let totalMatchesCount = 0
+  for (let cat of _state.categories) {
+    let items = matches[cat]
 
-    // handle selection
-    opt.addEventListener('click', selectionHandler)
-    div.appendChild(opt)
+    if (!items || items.length === 0) {
+      continue
+    } else {
+      totalMatchesCount += items.count
+
+      const opt = document.createElement('div')
+      opt.classList.add('divider')
+      opt.innerHTML = cat
+      div.appendChild(opt)
+
+      for (let el of items) {
+        const opt = document.createElement('div')
+        opt.classList.add('item')
+        opt.innerHTML = `${utils.wrapSubstring(el, val)}
+          <input type='hidden' value='${el}'>`
+
+        // handle selection
+        opt.addEventListener('click', selectionHandler)
+        div.appendChild(opt)
+      }
+    }
   }
-  if (!items || items.length === 0) {
+
+  if (totalMatchesCount === 0) {
     const noRes = document.createElement('div')
     noRes.innerHTML = 'No matching Amazon warehouse found.'
     noRes.classList = 'notfound'
     div.appendChild(noRes)
     // notify about invalid query
     console.log('no results: []')
-    inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+    _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged',
       {
         detail: {
           query: val,
@@ -116,30 +135,35 @@ const addItemsToList = function (items, val = null) {
 }
 
 const inputHandler = function (e) {
-  let val = this.value
-  if (!val) {
+  _state.query = this.value
+
+  if (!_state.query) {
+    console.log('query evaluates to false')
     closeAllLists()
-    // inputEls.item(0).dispatchEvent(new window.CustomEvent('queryChanged',
+    // _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
     //   {
-    //     detail: {
-    //       query: val,
-    //       values: null
-    //     }
-    //   }))
+    //     query: _state.query,
+    //     values: null
+    //   }
+    // }))
     return
   }
 
-  let matches = []
+  let matches = {}
+
   // for each item in the array...
-  for (let el of wordList) {
-    if (matches.length === options.maxItems) {
-      break
-    }
-    if (el.toUpperCase().includes(val.toUpperCase())) {
-      matches.push(el)
+  for (let cat of _state.categories) {
+    matches[cat] = []
+    for (let el of _state.wordLists[cat]) {
+      if (matches[cat].length === _state.options.maxItems) {
+        break
+      }
+      if (el.toUpperCase().includes(_state.query.toUpperCase())) {
+        matches[cat].push(el)
+      }
     }
   }
-  addItemsToList.bind(this)(matches, val)
+  addItemsToList.bind(this)(matches, _state.query)
 }
 
 const removeActive = function (x) {
@@ -151,6 +175,8 @@ const removeActive = function (x) {
 
 const addActive = function (x) {
   if (!x) return false
+
+  let currentFocus = _state.currentFocus
 
   removeActive(x)
   if (currentFocus >= x.length) currentFocus = 0
@@ -164,59 +190,65 @@ const keyDownHandler = function (e) {
   if (x) x = x.getElementsByTagName('div')
   if (e.keyCode === 40) {
     // If the arrow DOWN key is pressed, increase the currentFocus variable:
-    currentFocus++
+    _state.currentFocus++
     // and and make the current item more visible:
     addActive(x)
   } else if (e.keyCode === 38) { // up
     // If the arrow UP key is pressed, decrease the currentFocus variable:
-    currentFocus--
+    _state.currentFocus--
     // and and make the current item more visible:
     addActive(x)
   } else if (e.keyCode === 13) {
     e.preventDefault()
-    if (currentFocus > -1) {
-      if (x) x[currentFocus].click()
+    if (_state.currentFocus > -1) {
+      if (x) x[_state.currentFocus].click()
     }
   }
 }
 
+// clicks text box
 const clickHandler = function (elmnt) {
   this.value = null
+  _state.query = null
   inputHandler.bind(this)(elmnt)
 }
 
 const _autocomplete = {}
 
-_autocomplete.init = function (inputs, words, optionsOverrides = {}) {
+_autocomplete.init = function (input, words, optionsOverrides = {}) {
   let defaultOptions = {
-    maxItems: 10,
+    maxItems: 5,
     queryChangeHandler: null
   }
 
-  options = Object.assign(defaultOptions, optionsOverrides)
-  inputEls = inputs
-  wordList = Object.keys(words)
-  valueMap = words
+  _state.options = Object.assign(defaultOptions, optionsOverrides)
+  _state.inputEl = input
+
+  _state.categories = Object.keys(words)
+  for (let k of _state.categories) {
+    _state.wordLists[k] = Object.keys(words[k]).sort()
+    Object.assign(_state.valuesList, words[k])
+  }
 
   // handle click to dropdown
-  addEventListenerToCollection(inputs, 'click', clickHandler)
+  input.addEventListener('click', clickHandler)
 
   // Handle input to the text box
-  addEventListenerToCollection(inputs, 'input', inputHandler)
+  input.addEventListener('input', inputHandler)
 
   // handle keyboard nav
-  addEventListenerToCollection(inputs, 'keydown', keyDownHandler)
+  input.addEventListener('keydown', keyDownHandler)
+
+  input.addEventListener('queryChanged', _state.options.queryChangeHandler)
 
   // handle click away from autocompletes
   document.addEventListener('click', function (e) {
     closeAllLists(e.target)
   })
-
-  addEventListenerToCollection(inputs, 'queryChanged', options.queryChangeHandler)
 }
 
-_autocomplete.setQuery = function (query) {
-  setValueInInputs(inputEls, query)
-}
+// _autocomplete.setQuery = function (query) {
+//   setValueInInputs(inputEls, query)
+// }
 
 export default _autocomplete

@@ -12,18 +12,17 @@ const WAREHOUSE_FILTER = ['==', 'valid', 1]
 const UNKNOWNS_FILTER = ['==', 'valid', 0]
 const HIDE_ALL = ['==', 'valid', 3]
 const STEP_COUNT = 10
+const DEFAULT_BBOX = [[-122.8, 25], [-69.5, 48.8]]
 const COLORS = ['#00429d', '#3c66ae', '#5f8bbe', '#82b2cf', '#acd7df', '#ffcab9', '#fd9291', '#e75d6f', '#c52a52', '#93003a']
 
 mapboxgl.accessToken = TOKEN
 
 _map.init = () => {
-  const bounds = new mapboxgl.LngLatBounds([
-    [-122.8, 25], [-69.5, 48.8]
-  ])
+  const bounds = new mapboxgl.LngLatBounds(DEFAULT_BBOX)
   const map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    maxZoom: 5,
+    maxZoom: 6,
     bounds: bounds,
     fitBoundsOptions: { padding: 20 }
   })
@@ -77,6 +76,7 @@ _map.setFilters = function (selectedIds) {
   let filters = buildFilters(selectedIds)
   this.map.setFilter(UNKNOWNS_LAYER, filters[0])
   this.map.setFilter(WAREHOUSE_LAYER, filters[1])
+  this.map.fitBounds(new mapboxgl.LngLatBounds(getBbox(selectedIds)), { padding: 20 })
 }
 
 const buildFilters = function (selectedIds) {
@@ -99,6 +99,7 @@ const setPopups = (map) => {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer'
 
+    // pick most prominent feature from under the cursor
     let feature = e.features[0].properties
 
     // Populate the popup and set its coordinates
@@ -113,8 +114,9 @@ const setPopups = (map) => {
   }
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
+  // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
 
-  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  // document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {
@@ -213,19 +215,26 @@ const compareChart = function (curr, baseline) {
   return outerDiv
 }
 
-// const filterData = function (data, validOnly) {
-//   let filterfx = (f) => typeof f.properties.injuryCount !== 'string'
-//   if (!validOnly) {
-//     filterfx = (f) => typeof f.properties.injuryCount === 'string'
-//   }
-//   let clonedData = JSON.parse(JSON.stringify(data))
-//   clonedData.features = clonedData.features.filter(filterfx)
-//     .map((f) => {
-//       f.valid = validOnly
-//       return f
-//     })
-//   return clonedData
-// }
+const getBbox = (selectedIds) => {
+  if (!selectedIds || selectedIds.length === 0) {
+    return DEFAULT_BBOX
+  }
+
+  const features = INCIDENTS.features.filter((f) => selectedIds.includes(f.properties.id))
+
+  const lats = []
+  const lngs = []
+  for (let f of features) {
+    const coords = f.geometry.coordinates
+    lngs.push(coords[0])
+    lats.push(coords[1])
+  }
+
+  return [
+    [Math.min(...lngs), Math.min(...lats)],
+    [Math.max(...lngs), Math.max(...lats)]
+  ]
+}
 
 const boolToString = function (bool) {
   if (typeof bool !== 'boolean') {

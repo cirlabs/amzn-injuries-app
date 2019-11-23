@@ -10,6 +10,7 @@
   h3 {
     font-size: 16px;
     line-height: 22px;
+    margin: 4px 0;
   }
 
   h5 {
@@ -115,7 +116,7 @@
 }
 
 .mapboxgl-popup-content {
-  max-height: 230px;
-  overflow: scroll;
+  max-height: 80vh;
+  overflow-y: scroll;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.3), 0 3px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }

@@ -3,7 +3,7 @@ const utils = {}
 utils.wrapSubstring = function (str, substr, before, after) {
   let i = str.toUpperCase().indexOf(substr.toUpperCase())
   let l = substr.length
-  before = before || "<span class='yellow-bg black-fg'>"
+  before = before || "<span class='highlight'>"
   after = after || '</span>'
   return `${str.substr(0, i)}${before}${str.substr(i, l)}${after}${str.substr(i + l)}`
 }
