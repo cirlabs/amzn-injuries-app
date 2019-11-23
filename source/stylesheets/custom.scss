@@ -32,18 +32,19 @@ h3 {
 table {
   font-size: 14px;
   border-collapse: collapse;
-	width: 100%;
+  width: 100%;
 }
 
-td, th {
-	padding: 4px;
-	border: none;
-	overflow: hidden;
-	text-align: left;
-	vertical-align: middle;
+td,
+ th {
+  padding: 4px;
+  border: none;
+  overflow: hidden;
+  text-align: left;
+  vertical-align: middle;
 }
 
-tr:hover{
+tr:hover {
   background-color: #f8f8f5;
   cursor: pointer;
 
@@ -68,9 +69,9 @@ th:hover {
   background-color: #eee;
 }
 
-th[data-sort-method='none']{
+th[data-sort-method='none'] {
   background-image: none;
-  padding-left:4px;
+  padding-left: 4px;
 }
 
 th[aria-sort=ascending] {
@@ -83,19 +84,19 @@ th[aria-sort=descending] {
   background-size: 7px 7px;
 }
 
-.state-bar{
+.state-bar {
   float: left;
   background-color: #cecece;
   display: block;
   height: 100%;
-  width: 0px;
+  width: 0;
 }
 
 .state-bar span {
   padding-left: 5px;
 }
 
-th.facility{
+th.facility {
   max-width: 6em;
 }
 

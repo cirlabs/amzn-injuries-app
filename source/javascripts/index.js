@@ -10719,7 +10719,7 @@ _map.init = function () {
         'source': 'incidents',
         'paint': {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 10, 7],
-          'circle-color': 'rgba(0,0,0,0.1)',
+          'circle-color': 'rgba(0,0,0,0.3)',
           'circle-stroke-color': DEFAULT_GREY,
           'circle-stroke-width': 0.5
         },
