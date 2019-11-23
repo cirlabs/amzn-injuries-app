@@ -10875,7 +10875,10 @@ var setPopups = function setPopups(map) {
   });
 
   var showPopup = function showPopup(e) {
-    // Change the cursor style as a UI indicator.
+    debugger;
+    e.originalEvent.stopPropagation();
+    e.originalEvent.preventDefault(); // Change the cursor style as a UI indicator.
+
     map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
 
     var feature = e.features[0].properties; // Populate the popup and set its coordinates
@@ -10889,8 +10892,8 @@ var setPopups = function setPopups(map) {
     popup.remove();
   };
 
-  map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
   map.on('mouseleave', UNKNOWNS_LAYER, hidePopup);
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };

@@ -106,6 +106,9 @@ const setPopups = (map) => {
     closeOnClick: true
   })
   const showPopup = function (e) {
+    debugger
+    e.originalEvent.stopPropagation()
+    e.originalEvent.preventDefault()
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer'
 
@@ -122,8 +125,9 @@ const setPopups = (map) => {
     map.getCanvas().style.cursor = ''
     popup.remove()
   }
-  map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
+
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
   map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
 
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
