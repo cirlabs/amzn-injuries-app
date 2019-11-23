@@ -10394,11 +10394,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var normalize_css_normalize_css__WEBPACK_IMPORTED_MODULE_149___default = /*#__PURE__*/__webpack_require__.n(normalize_css_normalize_css__WEBPACK_IMPORTED_MODULE_149__);
 /* harmony import */ var font__WEBPACK_IMPORTED_MODULE_150__ = __webpack_require__(/*! font */ "./src/font.js");
 /* harmony import */ var map__WEBPACK_IMPORTED_MODULE_151__ = __webpack_require__(/*! map */ "./src/map.js");
-/* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152__ = __webpack_require__(/*! Tablesort */ "./node_modules/Tablesort/src/tablesort.js");
-/* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_152___default = /*#__PURE__*/__webpack_require__.n(Tablesort__WEBPACK_IMPORTED_MODULE_152__);
-/* harmony import */ var tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! tablesort.number.js */ "./src/tablesort.number.js");
-/* harmony import */ var autocomplete__WEBPACK_IMPORTED_MODULE_154__ = __webpack_require__(/*! autocomplete */ "./src/autocomplete.js");
-
+/* harmony import */ var table__WEBPACK_IMPORTED_MODULE_152__ = __webpack_require__(/*! table */ "./src/table.js");
+/* harmony import */ var autocomplete__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! autocomplete */ "./src/autocomplete.js");
 
 
 
@@ -10712,12 +10709,13 @@ __webpack_require__.r(__webpack_exports__);
 
   var handleSearchInput = function handleSearchInput(e) {
     app.filteredIdList = e.detail.values;
-    map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map and table
+    map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList);
+    table__WEBPACK_IMPORTED_MODULE_152__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map 
   };
 
   var initAutoComplete = function initAutoComplete() {
     var searchBars = document.getElementById('autocomplete');
-    autocomplete__WEBPACK_IMPORTED_MODULE_154__["default"].init(searchBars, SEARCH_TERMS, {
+    autocomplete__WEBPACK_IMPORTED_MODULE_153__["default"].init(searchBars, SEARCH_TERMS, {
       queryChangeHandler: handleSearchInput
     });
   };
@@ -10735,16 +10733,8 @@ __webpack_require__.r(__webpack_exports__);
       wireEvents();
       app.pymChild.sendHeight();
     });
-    var table = document.getElementById('table-sortable');
-    tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a);
-    var sort = Tablesort__WEBPACK_IMPORTED_MODULE_152___default()(table, {
-      descending: true
-    });
+    table__WEBPACK_IMPORTED_MODULE_152__["default"].init(app);
     initAutoComplete();
-    tablesort_number_js__WEBPACK_IMPORTED_MODULE_153__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_152___default.a); // issue event on expand and hide
-    // refresh sorting, once searched
-    // sort.refresh();
-
     app.pymChild.sendHeight();
   }); // TODO: implement this
 
@@ -11072,6 +11062,70 @@ var createStyle = function createStyle() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_map);
+
+/***/ }),
+
+/***/ "./src/table.js":
+/*!**********************!*\
+  !*** ./src/table.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Tablesort */ "./node_modules/Tablesort/src/tablesort.js");
+/* harmony import */ var Tablesort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(Tablesort__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tablesort.number.js */ "./src/tablesort.number.js");
+
+
+var _table = {};
+
+_table.init = function (app) {
+  // initiate 
+  var table = document.getElementById('table-sortable');
+  console.log(table);
+  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a);
+  Tablesort__WEBPACK_IMPORTED_MODULE_0___default()(table, {
+    descending: true
+  });
+  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a); // issue event on expand and hide
+  // refresh sorting, once searched
+  // sort.refresh();
+  //   app.pymChild.sendHeight()
+
+  _table.table = table;
+};
+
+_table.setFilters = function (selectedIds) {//   let filters = buildFilters(selectedIds)
+  //   this.table.setFilter(UNKNOWNS_LAYER, filters[0])
+  //   this.table.setFilter(WAREHOUSE_LAYER, filters[1])
+  //   if (selectedIds && selectedIds.length === 1) {
+  //     this.table.zoomTo(5)
+  //     this.table.setCenter(getCoordinates(selectedIds[0]))
+  //     return
+  //   }
+  //   this.table.fitBounds(new tableboxgl.LngLatBounds(getBbox(selectedIds)), { padding: 20 })
+};
+
+_table.resettable = function () {
+  this.setFilters(null);
+};
+
+var buildFilters = function buildFilters(selectedIds) {
+  if (!selectedIds) {
+    return [UNKNOWNS_FILTER, WAREHOUSE_FILTER];
+  }
+
+  if (selectedIds.length === 0) {
+    return [HIDE_ALL, HIDE_ALL];
+  }
+
+  var clause = ['in', 'id'].concat(selectedIds);
+  return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]];
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (_table);
 
 /***/ }),
 

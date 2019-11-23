@@ -4,8 +4,8 @@ import 'core-js'
 
 import fontLoader from 'font'
 import map from 'map'
-import tablesort from 'Tablesort'
-import number from 'tablesort.number.js'
+import table from 'table'
+
 import autocomplete from 'autocomplete'
 
 (function () {
@@ -19,7 +19,9 @@ import autocomplete from 'autocomplete'
     app.filteredIdList = e.detail.values
     map.setFilters(app.filteredIdList)
 
-    // TODO: add handlers for map and table
+    table.setFilters(app.filteredIdList)
+
+    // TODO: add handlers for map 
   }
 
   const initAutoComplete = () => {
@@ -43,20 +45,9 @@ import autocomplete from 'autocomplete'
         app.pymChild.sendHeight()
       })
 
-    let table = document.getElementById('table-sortable')
-    number.shim(tablesort)
-    let sort = tablesort(table, {
-      descending: true
-    })
-    initAutoComplete()
-
-    number.shim(tablesort)
-
-    // issue event on expand and hide
+    table.init(app)
     
-    // refresh sorting, once searched
-    // sort.refresh();
-
+    initAutoComplete()
     app.pymChild.sendHeight()
   })
 
