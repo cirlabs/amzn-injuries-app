@@ -5,35 +5,34 @@ import number from 'tablesort.number.js'
 const _table = {}
 
 _table.init = (app) => {
-  // initiate 
   let table = document.getElementById('table-sortable')
-  console.log(table)
+  _table.table = table
+  _table.app = app
+
+  // resize ifram when show / hide happens
+  document.getElementById("show").addEventListener("click", resizeiFrame)
+  document.getElementById("hide").addEventListener("click", resizeiFrame)
+
+  // sort by numbers 
   number.shim(tablesort)
+  // default
   tablesort(table, {
     descending: true
   })
-  number.shim(tablesort)
 
-  var resizeiFrame = function() {
-      setTimeout( function (){
-        app.pymChild.sendHeight()
-      }, 0)
-   
-  }
 
-  document.getElementById("show").addEventListener("click", resizeiFrame)
-  document.getElementById("hide").addEventListener("click", resizeiFrame)
-  
-  
   // issue event on expand and hide
   
   // refresh sorting, once searched
   // sort.refresh();
 
-  _table.table = table
+ 
+  
 }
 
+
 _table.setFilters = function (selectedIds) {
+  
 //   let filters = buildFilters(selectedIds)
 //   this.table.setFilter(UNKNOWNS_LAYER, filters[0])
 //   this.table.setFilter(WAREHOUSE_LAYER, filters[1])
@@ -61,7 +60,11 @@ const buildFilters = function (selectedIds) {
   return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]]
 }
 
-
+const resizeiFrame = function() {
+    setTimeout( function (){
+      _table.app.pymChild.sendHeight()
+    }, 0)
+}
 
 
 

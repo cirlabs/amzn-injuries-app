@@ -11082,27 +11082,20 @@ __webpack_require__.r(__webpack_exports__);
 var _table = {};
 
 _table.init = function (app) {
-  // initiate 
   var table = document.getElementById('table-sortable');
-  console.log(table);
-  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a);
-  Tablesort__WEBPACK_IMPORTED_MODULE_0___default()(table, {
-    descending: true
-  });
-  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a);
-
-  var resizeiFrame = function resizeiFrame() {
-    setTimeout(function () {
-      app.pymChild.sendHeight();
-    }, 0);
-  };
+  _table.table = table;
+  _table.app = app; // resize ifram when show / hide happens
 
   document.getElementById("show").addEventListener("click", resizeiFrame);
-  document.getElementById("hide").addEventListener("click", resizeiFrame); // issue event on expand and hide
+  document.getElementById("hide").addEventListener("click", resizeiFrame); // sort by numbers 
+
+  tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a); // default
+
+  Tablesort__WEBPACK_IMPORTED_MODULE_0___default()(table, {
+    descending: true
+  }); // issue event on expand and hide
   // refresh sorting, once searched
   // sort.refresh();
-
-  _table.table = table;
 };
 
 _table.setFilters = function (selectedIds) {//   let filters = buildFilters(selectedIds)
@@ -11131,6 +11124,12 @@ var buildFilters = function buildFilters(selectedIds) {
 
   var clause = ['in', 'id'].concat(selectedIds);
   return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]];
+};
+
+var resizeiFrame = function resizeiFrame() {
+  setTimeout(function () {
+    _table.app.pymChild.sendHeight();
+  }, 0);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (_table);
