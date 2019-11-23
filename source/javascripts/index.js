@@ -11092,11 +11092,9 @@ _table.init = function (app) {
   tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a);
 
   var resizeiFrame = function resizeiFrame() {
-    // because of the css animation
     setTimeout(function () {
       app.pymChild.sendHeight();
-    }, 600);
-    console.log("hola");
+    }, 0);
   };
 
   document.getElementById("show").addEventListener("click", resizeiFrame);

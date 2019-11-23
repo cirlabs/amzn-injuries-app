@@ -14,13 +14,11 @@ _table.init = (app) => {
   })
   number.shim(tablesort)
 
-  var resizeiFrame = function(){
-      // because of the css animation
+  var resizeiFrame = function() {
       setTimeout( function (){
         app.pymChild.sendHeight()
-      }, 600)
-    
-    console.log("hola")
+      }, 0)
+   
   }
 
   document.getElementById("show").addEventListener("click", resizeiFrame)
