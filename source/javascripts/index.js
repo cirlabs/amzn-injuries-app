@@ -10892,8 +10892,8 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
-  map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
-  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup);
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup); // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
+
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
 
@@ -10929,8 +10929,8 @@ var tooltipBody = function tooltipBody(feature) {
   if (feature.valid === 1) {
     var deets = document.createElement('div');
     deets.classList.add('details');
-    deets.appendChild(formatProperty('Injuries reported', feature.injuryCount));
-    deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount));
+    deets.appendChild(formatProperty('Injuries reported', feature.injuryCount)); // deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount))
+
     deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
     deets.appendChild(compareChart(toPrecision(feature.trir), META.trir));
     deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
