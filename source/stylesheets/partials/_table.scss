@@ -82,13 +82,18 @@
     padding-left: 5px;
   }
 
-  span.unknown {
-    color:#a9a5a5;
-  }
 }
 
 #sources {
   font-size: 14px;
+
+  ul {
+    margin-top: 0;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
 }
 
 #contact {
