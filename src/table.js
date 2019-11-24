@@ -20,6 +20,7 @@ _table.init = (app) => {
     descending: true
   })
   
+  resizeiFrame()
 }
 
 _table.setFilters = function (selectedIds) {
@@ -29,7 +30,6 @@ _table.setFilters = function (selectedIds) {
     return
   }
 
-  console.log(selectedIds)
   let items = document.querySelectorAll("#table-sortable tbody tr, .action")
   hideAll(items)
 

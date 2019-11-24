@@ -11099,6 +11099,7 @@ _table.init = function (app) {
   Tablesort__WEBPACK_IMPORTED_MODULE_0___default()(table, {
     descending: true
   });
+  resizeiFrame();
 };
 
 _table.setFilters = function (selectedIds) {
@@ -11108,7 +11109,6 @@ _table.setFilters = function (selectedIds) {
     return;
   }
 
-  console.log(selectedIds);
   var items = document.querySelectorAll("#table-sortable tbody tr, .action");
   hideAll(items);
   selectedIds.forEach(function (key) {
