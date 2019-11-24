@@ -6,6 +6,10 @@
   position: relative;
   font-size: 14px;
 
+  .wrapper{
+    position: relative;
+  }
+
   table {
     border-collapse: collapse;
     width: 100%;  
@@ -104,16 +108,16 @@
   }
 
   .action {
-    left: 30%;
-    padding: 1em 1em 3.6em 1em;;
+    left: 20%;
+    padding: 0.5em;
     text-decoration: none;
-    width: 40%;
+    width: 50%;
     right: 0;
   }
 
   .show, .hide {
     position: absolute;
-    bottom: 5em;
+    bottom: -25px;
     z-index: 100;
     text-align: center;
     color: #222;

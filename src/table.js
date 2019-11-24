@@ -26,6 +26,8 @@ _table.init = (app) => {
 _table.setFilters = function (selectedIds) {
   if(!selectedIds) {
     document.querySelectorAll("#table-sortable tr")
+
+
   }
 
   selectedIds.forEach(key => {
@@ -34,7 +36,7 @@ _table.setFilters = function (selectedIds) {
   resizeiFrame()
 }
 
-const 
+
 const resizeiFrame = function() {
     setTimeout( function (){
       _table.app.pymChild.sendHeight()
