@@ -4,7 +4,7 @@
   <a href="#hide" class="hide action" id="hide"><span>Hide</span></a>
 
   <div class="panel">
-    <h3>List of facilities with known injury records</h3>
+    <h3>List of Amazon facilities</h3>
     <table id="table-sortable" class="sort">
       <thead>
         <tr>
@@ -17,6 +17,9 @@
       <tbody>
         <% data.amazon.keys.each do |key| %>
           <% f = data.amazon[key] %>
+          <% unknownTemplate = '<span class="unknown">
+                                  <a href="https://www.revealnews.org/amazonrecords" title="We don\'t have the records. If you work or have worked here\'s how you can get the records.">Unavailable</a>
+                                </span>' %>
           <tr data-facility="<%= key %>">
             <td><%= key %></td>
             <td><%= f["City"] %>, <%= f["State"] %> &mdash; <%= f["Zip Code"] %></td>
@@ -25,18 +28,26 @@
             <% roundedDart = dart.to_f.round(2) %>
             <% normalisedDart = dart == "UNKNOWN" ? "0" : roundedDart %>
             <td data-sort="<%= normalisedDart %>">
+              <% if dart == "UNKNOWN" %>
+                <%= unknownTemplate %>
+              <% else %>
               <span class="state-bar" style="width: calc(<%= normalisedDart %>/100 * 200%);">
-                <span <%= dart == "UNKNOWN" ? 'class="unknown"' : '' %>><%= dart == "UNKNOWN" ? "Unavailable" : roundedDart %></span>
+                <%= roundedDart %>
               </span>
+              <% end %>
             </td>
 
             <% count = f["Number of Injuries for 2018"] %>
             <% roundedCount = count.to_i %>
             <% normalisedCountValue = count == "UNKNOWN" ? "0" : roundedCount %>
             <td data-sort="<%= normalisedCountValue %>" >
+              <% if count == "UNKNOWN" %>
+                <%= unknownTemplate %>
+              <% else %>
               <span class="state-bar" style="width: calc(<%= normalisedCountValue %>/500 * 100%);">  
-                <span <%= count == "UNKNOWN" ? 'class="unknown"' : '' %>><%= count == "UNKNOWN" ? "Unavailable" : roundedCount %></span>
+                <%= roundedCount %>]\
               </span>  
+              <% end %>
             </td>
           </tr>
         <% end %>
@@ -47,7 +58,11 @@
   </div><!-- end panel -->
 </div><!-- end wrapper -->
 <div id="sources">
-  <p>Sources: For locations - <a href="http://www.mwpvl.com/html/amazon_com.html">MWPVL</a>, <a href="https://www.avalara.com/small-business/en/amazon-fulfillment-center-locations.html">Avalara</a> | For injury data - Amazon, <a href="https://www.google.com/url?q=https://www.documentcloud.org/search/projectid:%2520%252246868-Amazon-Injury-Records%2522&sa=D&ust=1574468522756000&usg=AFQjCNHwRqcdffuRcwob1sefgCFUf1hfWA">current and former Amazon workers</a></p>
+  <p>Sources:</p>
+  <ul>
+    <li>For locations - <a href="http://www.mwpvl.com/html/amazon_com.html">MWPVL</a>, <a href="https://www.avalara.com/small-business/en/amazon-fulfillment-center-locations.html">Avalara</a></li>
+    <li>For injury data - Amazon, <a href="https://www.google.com/url?q=https://www.documentcloud.org/search/projectid:%2520%252246868-Amazon-Injury-Records%2522&sa=D&ust=1574468522756000&usg=AFQjCNHwRqcdffuRcwob1sefgCFUf1hfWA">current and former Amazon workers</a></li>
+  </ul>
 </div>
 
 
