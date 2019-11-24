@@ -10702,11 +10702,21 @@ __webpack_require__.r(__webpack_exports__);
 
 (function () {
   var app = {
-    searchQuery: ''
+    searchQuery: '',
+    smallScreen: true
   };
 
   var wireEvents = function wireEvents() {
     window.addEventListener('resize', function () {
+      app.height = window.innerHeight;
+      app.width = window.innerWidth;
+
+      if (app.width <= 600) {
+        app.screenSize = 's';
+      } else if (app.width <= 480) {
+        app.screenSize = 'xs';
+      }
+
       map__WEBPACK_IMPORTED_MODULE_151__["default"].resetMap();
     });
   };
@@ -10878,8 +10888,26 @@ var setPopups = function setPopups(map) {
 
     map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
 
-    var feature = e.features[0].properties; // Populate the popup and set its coordinates
+    var feature = e.features[0].properties;
+    var anchor = {};
+    var mapW = document.getElementById('map').clientWidth;
+    var mapH = document.getElementById('map').clientHeight;
+
+    if (window.app.screenSize === 'xs') {
+      anchor.options.maxWidth = 320;
+    }
+
+    if (window.app.screenSize === 's' || window.app.screenSize === 'xs') {
+      anchor = {
+        x: e.point.x > mapW / 2 ? 'right' : 'left',
+        y: e.point.y < mapH / 3 ? 'top-' : e.point.y > 2 * mapH / 3 ? 'bottom-' : ''
+      };
+      popup.options.anchor = anchor.y + anchor.x;
+    } else {
+      popup.options.anchor = null;
+    } // Populate the popup and set its coordinates
     // based on the feature found.
+
 
     popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
   };
