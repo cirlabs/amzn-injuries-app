@@ -10705,13 +10705,17 @@ __webpack_require__.r(__webpack_exports__);
     searchQuery: ''
   };
 
-  var wireEvents = function wireEvents() {};
+  var wireEvents = function wireEvents() {
+    window.addEventListener('resize', function () {
+      map__WEBPACK_IMPORTED_MODULE_151__["default"].resetMap();
+    });
+  };
 
   var handleSearchInput = function handleSearchInput(e) {
     app.filteredIdList = e.detail.values;
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList);
     table__WEBPACK_IMPORTED_MODULE_152__["default"].setFilters(app.filteredIdList);
-    console.log("handle" + app.filteredIdList); // TODO: add handlers for map 
+    console.log('handle' + app.filteredIdList); // TODO: add handlers for map
   };
 
   var initAutoComplete = function initAutoComplete() {

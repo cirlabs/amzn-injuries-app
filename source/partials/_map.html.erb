@@ -1,20 +1,18 @@
+
 <section id="mapHolder">
   <div id="loadingIcon">Loading...</div>
   <div id='map' class="invisible"></div>
-
 </section>
-
 <div id="maplegend">
-  <div class="maplegend-body">
-    <div>Total Recordable Incident Rate(TRIR): </div>
+  <div class="line">
+    <p>Total Recordable Incident Rate(TRIR): </p>
     <div class="scales">
-      <div>0</div>
+      <span>0</span>
       <% [*1..10].each do |i| %>
-      <div class=<%="bg-cat-#{i}"%> ></div>
+      <span class='dot <%="bg-cat-#{i}"%>' ></span>
       <% end %>
-      <div>27</div>
+      <span>27</span>
     </div>
-        </div>
-    <div class="default-legend">Warehouse with no data <span class="default-bg"></span> </div>
-
+  </div>
+  <div class="line">Warehouse with no data: <span class="dot default-bg"></span> </div>
 </div>
