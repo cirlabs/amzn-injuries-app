@@ -22,4 +22,12 @@ utils.collectionContains = function (collection, el) {
   }
   return ret
 }
+
+utils.isScrolledIntoView = function (elem) {
+  debugger
+  let docViewTop = document.documentElement.scrollTop
+  let docViewBottom = docViewTop + window.app.height
+  return elem.offsetTop < docViewBottom && elem.offsetTop > docViewTop
+}
+
 export default utils

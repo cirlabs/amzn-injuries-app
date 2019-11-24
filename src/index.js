@@ -14,6 +14,12 @@ import autocomplete from 'autocomplete'
     smallScreen: true
   }
 
+  app.hideScrollndicator = () => {
+    const elem = document.getElementById('scrollArrow')
+    elem.classList.add('hide')
+    document.removeEventListener('click', app.hideScrollndicator)
+  }
+
   const wireEvents = () => {
     window.addEventListener('resize', () => {
       app.height = window.innerHeight
@@ -25,6 +31,8 @@ import autocomplete from 'autocomplete'
       }
       map.resetMap()
     })
+    window.setTimeout(app.hideScrollndicator, 10000)
+    document.addEventListener('click', app.hideScrollndicator)
   }
 
   const handleSearchInput = (e) => {
@@ -33,7 +41,6 @@ import autocomplete from 'autocomplete'
 
     table.setFilters(app.filteredIdList)
     console.log('handle' + app.filteredIdList)
-    // TODO: add handlers for map
   }
 
   const initAutoComplete = () => {

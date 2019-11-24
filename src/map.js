@@ -117,17 +117,13 @@ const setPopups = (map) => {
     const mapW = document.getElementById('map').clientWidth
     const mapH = document.getElementById('map').clientHeight
     if (window.app.screenSize === 'xs') {
-      anchor.options.maxWidth = 320
+      anchor.options.maxWidth = 150
     }
-    if (window.app.screenSize === 's' || window.app.screenSize === 'xs') {
-      anchor = {
-        x: e.point.x > mapW / 2 ? 'right' : 'left',
-        y: e.point.y < mapH / 3 ? 'top-' : (e.point.y > 2 * mapH / 3 ? 'bottom-' : '')
-      }
-      popup.options.anchor = anchor.y + anchor.x
-    } else {
-      popup.options.anchor = null
+    anchor = {
+      x: e.point.x > mapW / 2 ? 'right' : 'left',
+      y: e.point.y < mapH / 3 ? 'top-' : (e.point.y > 2 * mapH / 3 ? 'bottom-' : '')
     }
+    popup.options.anchor = anchor.y + anchor.x
 
     // Populate the popup and set its coordinates
     // based on the feature found.

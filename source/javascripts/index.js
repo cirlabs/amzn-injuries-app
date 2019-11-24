@@ -10706,6 +10706,12 @@ __webpack_require__.r(__webpack_exports__);
     smallScreen: true
   };
 
+  app.hideScrollndicator = function () {
+    var elem = document.getElementById('scrollArrow');
+    elem.classList.add('hide');
+    document.removeEventListener('click', app.hideScrollndicator);
+  };
+
   var wireEvents = function wireEvents() {
     window.addEventListener('resize', function () {
       app.height = window.innerHeight;
@@ -10719,13 +10725,15 @@ __webpack_require__.r(__webpack_exports__);
 
       map__WEBPACK_IMPORTED_MODULE_151__["default"].resetMap();
     });
+    window.setTimeout(app.hideScrollndicator, 10000);
+    document.addEventListener('click', app.hideScrollndicator);
   };
 
   var handleSearchInput = function handleSearchInput(e) {
     app.filteredIdList = e.detail.values;
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList);
     table__WEBPACK_IMPORTED_MODULE_152__["default"].setFilters(app.filteredIdList);
-    console.log('handle' + app.filteredIdList); // TODO: add handlers for map
+    console.log('handle' + app.filteredIdList);
   };
 
   var initAutoComplete = function initAutoComplete() {
@@ -10894,20 +10902,15 @@ var setPopups = function setPopups(map) {
     var mapH = document.getElementById('map').clientHeight;
 
     if (window.app.screenSize === 'xs') {
-      anchor.options.maxWidth = 320;
+      anchor.options.maxWidth = 150;
     }
 
-    if (window.app.screenSize === 's' || window.app.screenSize === 'xs') {
-      anchor = {
-        x: e.point.x > mapW / 2 ? 'right' : 'left',
-        y: e.point.y < mapH / 3 ? 'top-' : e.point.y > 2 * mapH / 3 ? 'bottom-' : ''
-      };
-      popup.options.anchor = anchor.y + anchor.x;
-    } else {
-      popup.options.anchor = null;
-    } // Populate the popup and set its coordinates
+    anchor = {
+      x: e.point.x > mapW / 2 ? 'right' : 'left',
+      y: e.point.y < mapH / 3 ? 'top-' : e.point.y > 2 * mapH / 3 ? 'bottom-' : ''
+    };
+    popup.options.anchor = anchor.y + anchor.x; // Populate the popup and set its coordinates
     // based on the feature found.
-
 
     popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
   };
@@ -11244,6 +11247,13 @@ utils.collectionContains = function (collection, el) {
   }
 
   return ret;
+};
+
+utils.isScrolledIntoView = function (elem) {
+  debugger;
+  var docViewTop = document.documentElement.scrollTop;
+  var docViewBottom = docViewTop + window.app.height;
+  return elem.offsetTop < docViewBottom && elem.offsetTop > docViewTop;
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (utils);

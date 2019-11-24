@@ -1,34 +1,36 @@
 
 #table-data {
-  margin: 50px auto;
-  padding: 0 50px;
+  margin: 24px auto;
+  padding: 0 12px;
   max-width: 960px;
   position: relative;
   font-size: 14px;
 
-  .wrapper{
+  .wrapper {
     position: relative;
   }
 
   table {
     border-collapse: collapse;
-    width: 100%;  
+    width: 100%;
     padding-bottom: 0.5em;
   }
 
-  tr.hide-row, .action.hide-row {
+  tr.hide-row,
+ .action.hide-row {
     display: none;
   }
 
-  td, th { 
-      padding: 4px; 
-      border: none;
-      overflow: hidden;
-      text-align: left;
-      vertical-align: middle;
+  td,
+ th {
+    padding: 4px;
+    border: none;
+    overflow: hidden;
+    text-align: left;
+    vertical-align: middle;
   }
 
-  tr:hover{
+  tr:hover {
     background-color: #f8f8f5;
 
     .state-bar {
@@ -36,11 +38,11 @@
     }
 
     span.unknown {
-        color: #000;
+      color: #000;
     }
   }
 
-  th {  
+  th {
     font-weight: 400;
     cursor: pointer;
     background: url(../images/arrow-sorters.svg) 6px center no-repeat;
@@ -55,9 +57,9 @@
     background-color: #eee;
   }
 
-  th[data-sort-method='none']{
+  th[data-sort-method='none'] {
     background-image: none;
-    padding-left:4px;
+    padding-left: 4px;
   }
 
   th[aria-sort=ascending] {
@@ -75,7 +77,7 @@
     background-color: #cecece;
     display: block;
     height: 100%;
-    width: 0px;
+    width: 0;
   }
 
   .state-bar span {
@@ -83,7 +85,7 @@
   }
 
   span.unknown {
-    color:#a9a5a5;
+    color: #a9a5a5;
   }
 }
 
@@ -115,7 +117,8 @@
     right: 0;
   }
 
-  .show, .hide {
+  .show,
+ .hide {
     position: absolute;
     bottom: -25px;
     z-index: 100;
@@ -123,13 +126,13 @@
     color: #222;
   }
 
-  .show span{
+  .show span {
     background: url(../images/arrow-sorter-desc.svg) 0 center no-repeat;
     background-size: 7px 7px;
     padding-left: 12px;
   }
 
-  .hide span{
+  .hide span {
     background: url(../images/arrow-sorter-asc.svg) 0 center no-repeat;
     background-size: 7px 7px;
     padding-left: 12px;
@@ -144,16 +147,10 @@
   }
 
   .show:target ~ .panel {
-    max-height: 2000px; 
+    max-height: 2000px;
   }
 
   .show:target ~ .fade {
     margin-top: 0;
   }
 }
-
-
-
-
-
-
