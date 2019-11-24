@@ -10782,7 +10782,6 @@ _map.init = function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    minZoom: 2.5,
     maxZoom: 6,
     bounds: bounds,
     fitBoundsOptions: {

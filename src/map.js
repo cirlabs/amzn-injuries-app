@@ -22,7 +22,6 @@ _map.init = () => {
   const map = new mapboxgl.Map({
     container: 'map',
     style: STYLE,
-    minZoom: 2.5,
     maxZoom: 6,
     bounds: bounds,
     fitBoundsOptions: { padding: 20 }
