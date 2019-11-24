@@ -13,15 +13,17 @@ import autocomplete from 'autocomplete'
     searchQuery: ''
   }
 
-  const wireEvents = () => {}
+  const wireEvents = () => {
+    window.addEventListener('resize', () => { map.resetMap() })
+  }
 
   const handleSearchInput = (e) => {
     app.filteredIdList = e.detail.values
     map.setFilters(app.filteredIdList)
 
     table.setFilters(app.filteredIdList)
-    console.log("handle" + app.filteredIdList)
-    // TODO: add handlers for map 
+    console.log('handle' + app.filteredIdList)
+    // TODO: add handlers for map
   }
 
   const initAutoComplete = () => {
@@ -46,7 +48,7 @@ import autocomplete from 'autocomplete'
       })
 
     table.init(app)
-    
+
     initAutoComplete()
     app.pymChild.sendHeight()
   })
