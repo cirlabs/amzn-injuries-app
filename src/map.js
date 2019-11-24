@@ -127,7 +127,7 @@ const setPopups = (map) => {
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
-  // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
 
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
@@ -177,7 +177,7 @@ const tooltipBody = function (feature) {
   } else {
     let deets = document.createElement('p')
     deets.classList.add('contact')
-    deets.innerText = 'We don\’t have the records. If you work or have worked here, '
+    deets.innerText = "We don't have the records. If you work or have worked here, "
 
     let a = document.createElement('a')
     let linkText = document.createTextNode('here')

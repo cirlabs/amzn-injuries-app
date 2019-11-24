@@ -10884,8 +10884,8 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
-  map.on('mouseenter', WAREHOUSE_LAYER, showPopup); // map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
-
+  map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup);
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
 
@@ -10933,7 +10933,7 @@ var tooltipBody = function tooltipBody(feature) {
 
     _deets.classList.add('contact');
 
-    _deets.innerText = 'We don\’t have the records. If you work or have worked here, ';
+    _deets.innerText = "We don't have the records. If you work or have worked here, ";
     var a = document.createElement('a');
     var linkText = document.createTextNode('here');
     a.appendChild(linkText);
