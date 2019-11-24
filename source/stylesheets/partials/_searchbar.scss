@@ -1,6 +1,6 @@
 #searchBar {
   display: flex;
-  margin: 20px;
+  margin: 20px 4px;
   flex-direction: column;
   position: relative;
 
@@ -36,8 +36,9 @@
 
 #autocomplete {
   width: 100%;
-  margin: 0 3px;
+  margin: 0;
   border: 1px solid;
+  font-size: 0.8em;
 }
 
 span.highlight {

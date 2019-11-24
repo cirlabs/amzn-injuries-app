@@ -41,7 +41,7 @@ helpers do
       .map { |k, v| [k, v.map { |x| x.properties.id }] }.to_h
 
     city_group = data.incidents.features
-      .group_by { |d| d.properties.city }
+      .group_by { |d| d.properties.city + ', ' + d.properties.state }
       .map { |k, v| [k, v.map { |x| x.properties.id }] }.to_h
 
     facility_hash = data.incidents.features

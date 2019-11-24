@@ -10837,8 +10837,10 @@ _map.setFilters = function (selectedIds) {
   this.map.setFilter(WAREHOUSE_LAYER, filters[1]);
 
   if (selectedIds && selectedIds.length === 1) {
-    this.map.zoomTo(5);
-    this.map.setCenter(getCoordinates(selectedIds[0]));
+    this.map.flyTo({
+      center: getCoordinates(selectedIds[0]),
+      zoom: 5
+    });
     return;
   }
 
