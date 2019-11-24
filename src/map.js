@@ -87,7 +87,6 @@ _map.setFilters = function (selectedIds) {
 }
 
 _map.resetMap = function () {
-  debugger 
   this.setFilters(null)
 }
 
