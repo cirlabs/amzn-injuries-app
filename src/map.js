@@ -142,8 +142,7 @@ const setPopups = (map) => {
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
-  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
-
+  
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
