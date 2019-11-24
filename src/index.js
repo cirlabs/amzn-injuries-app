@@ -20,7 +20,7 @@ import autocomplete from 'autocomplete'
     map.setFilters(app.filteredIdList)
 
     table.setFilters(app.filteredIdList)
-
+    console.log("handle" + app.filteredIdList)
     // TODO: add handlers for map 
   }
 

@@ -10710,7 +10710,8 @@ __webpack_require__.r(__webpack_exports__);
   var handleSearchInput = function handleSearchInput(e) {
     app.filteredIdList = e.detail.values;
     map__WEBPACK_IMPORTED_MODULE_151__["default"].setFilters(app.filteredIdList);
-    table__WEBPACK_IMPORTED_MODULE_152__["default"].setFilters(app.filteredIdList); // TODO: add handlers for map 
+    table__WEBPACK_IMPORTED_MODULE_152__["default"].setFilters(app.filteredIdList);
+    console.log("handle" + app.filteredIdList); // TODO: add handlers for map 
   };
 
   var initAutoComplete = function initAutoComplete() {
@@ -11084,10 +11085,10 @@ var _table = {};
 _table.init = function (app) {
   var table = document.getElementById('table-sortable');
   _table.table = table;
-  _table.app = app; // resize ifram when show / hide happens
+  _table.app = app; // resize iframe when show / hide happens
 
   document.getElementById("show").addEventListener("click", resizeiFrame);
-  document.getElementById("hide").addEventListener("click", resizeiFrame); // sort by numbers 
+  document.getElementById("hide").addEventListener("click", resizeiFrame); // add support for sorting numeric values 
 
   tablesort_number_js__WEBPACK_IMPORTED_MODULE_1__["default"].shim(Tablesort__WEBPACK_IMPORTED_MODULE_0___default.a); // default
 
@@ -11097,14 +11098,31 @@ _table.init = function (app) {
 };
 
 _table.setFilters = function (selectedIds) {
-  if (!selectedIds) {
-    document.querySelectorAll("#table-sortable tr");
+  if (!selectedIds || selectedIds === null) {
+    var rows = document.querySelectorAll("#table-sortable tbody tr, .action");
+    showAll(rows);
+    return;
   }
 
+  console.log(selectedIds);
+  var items = document.querySelectorAll("#table-sortable tbody tr, .action");
+  hideAll(items);
   selectedIds.forEach(function (key) {
-    document.querySelector("[data-facility='".concat(key, "']")).classList.remove("hide");
+    document.querySelector("[data-facility='".concat(key, "']")).classList.remove("hide-row");
   });
   resizeiFrame();
+};
+
+var showAll = function showAll(items) {
+  for (var i = 0; i < items.length; i++) {
+    items[i].classList.remove("hide-row");
+  }
+};
+
+var hideAll = function hideAll(items) {
+  for (var i = 0; i < items.length; i++) {
+    items[i].classList.add("hide-row");
+  }
 };
 
 var resizeiFrame = function resizeiFrame() {
