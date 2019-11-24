@@ -10,11 +10,21 @@ import autocomplete from 'autocomplete'
 
 (function () {
   let app = {
-    searchQuery: ''
+    searchQuery: '',
+    smallScreen: true
   }
 
   const wireEvents = () => {
-    window.addEventListener('resize', () => { map.resetMap() })
+    window.addEventListener('resize', () => {
+      app.height = window.innerHeight
+      app.width = window.innerWidth
+      if (app.width <= 600) {
+        app.screenSize = 's'
+      } else if (app.width <= 480) {
+        app.screenSize = 'xs'
+      }
+      map.resetMap()
+    })
   }
 
   const handleSearchInput = (e) => {
