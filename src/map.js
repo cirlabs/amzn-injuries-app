@@ -131,7 +131,6 @@ const setPopups = (map) => {
       .addTo(map)
   }
   const hidePopup = function (e) {
-    e.originalEvent.stopPropagation()
     map.getCanvas().style.cursor = ''
     popup.remove()
   }

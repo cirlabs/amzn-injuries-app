@@ -10915,7 +10915,6 @@ var setPopups = function setPopups(map) {
   };
 
   var hidePopup = function hidePopup(e) {
-    e.originalEvent.stopPropagation();
     map.getCanvas().style.cursor = '';
     popup.remove();
   };
