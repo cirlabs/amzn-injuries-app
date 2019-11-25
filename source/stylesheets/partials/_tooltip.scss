@@ -1,5 +1,5 @@
 .tooltip-body {
-  max-width: 220px;
+  // max-width: 220px;
   overflow: auto;
   padding: 4px;
 
@@ -44,7 +44,7 @@
     display: flex;
     position: relative;
     justify-content: space-between;
-    margin: 22px 0;
+    margin: 28px 0;
 
     p {
       margin: 0 5px;
@@ -68,17 +68,19 @@
         position: absolute;
         top: -15px;
         color: inherit;
+        color: $grey;
+        font-size: 12px;
       }
 
       &.curr-step::after {
         content: attr(data-curr);
         position: absolute;
-        top: -20px;
-        color: inherit;
-        font-size: 0.8em;
+        top: -24px;
+        font-size: 10px;
         line-height: 1;
         min-width: 100%;
         margin-left: -50%;
+        color: $grey;
       }
 
       &.ind-avg-step::before {
@@ -86,6 +88,7 @@
         position: absolute;
         bottom: -15px;
         color: $grey;
+        font-size: 12px;
       }
 
       &.ind-avg-step::after {
@@ -93,7 +96,7 @@
         position: absolute;
         bottom: -20px;
         color: $grey;
-        font-size: 0.8em;
+        font-size: 10px;
         line-height: 1;
         margin-left: -50%;
       }

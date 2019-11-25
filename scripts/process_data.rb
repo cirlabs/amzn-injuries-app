@@ -49,7 +49,7 @@ def fix_keys(obj)
   end.to_h
 end
 
-def to_feature(key, obj)
+def to_feature(key, obj, id)
   lng = obj.delete(@key_lookup['lng'])
   lat = obj.delete(@key_lookup['lat'])
   new_obj = fix_keys(obj)
@@ -61,14 +61,15 @@ def to_feature(key, obj)
     "geometry": {
       "type": "Point",
       "coordinates": [lng, lat]
-    }
+    },
+    "id": id
   }
 end
 
 def create_geojson(data)
   arr = []
-  data.keys.each do |k|
-    arr << to_feature(k, data[k])
+  data.keys.each_with_index do |k, i|
+    arr << to_feature(k, data[k], i + 1)
   end
   arr
 end

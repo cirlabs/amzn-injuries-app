@@ -11,7 +11,8 @@ import autocomplete from 'autocomplete'
 (function () {
   let app = {
     searchQuery: '',
-    smallScreen: true
+    smallScreen: true,
+    currHover: 1
   }
 
   app.hideScrollndicator = () => {

@@ -1,6 +1,6 @@
 
 const _map = {}
-// const AMAZON_ORANGE = '#f38d20'
+const AMAZON_ORANGE = '#f38d20'
 const DEFAULT_GREY = '#666'
 const TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'
 
@@ -42,8 +42,8 @@ _map.init = () => {
         'paint': {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 15],
           'circle-color': createStyle(),
-          'circle-stroke-color': DEFAULT_GREY,
-          'circle-stroke-width': 1,
+          'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false], AMAZON_ORANGE, DEFAULT_GREY],
+          'circle-stroke-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 1],
           'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0.4]
         },
         'filter': ['==', 'valid', 1]
@@ -55,8 +55,8 @@ _map.init = () => {
         'paint': {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 10, 7],
           'circle-color': 'rgba(0,0,0,0.3)',
-          'circle-stroke-color': DEFAULT_GREY,
-          'circle-stroke-width': 0.5
+          'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false], AMAZON_ORANGE, DEFAULT_GREY],
+          'circle-stroke-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 0.5]
         },
         'filter': ['all', ['==', 'valid', 0]]
       }, WAREHOUSE_LAYER)
@@ -73,6 +73,9 @@ _map.init = () => {
 }
 
 _map.setFilters = function (selectedIds) {
+  setHoverState(this.map, null)
+  hideInfo()
+
   let filters = buildFilters(selectedIds)
   this.map.setFilter(UNKNOWNS_LAYER, filters[0])
   this.map.setFilter(WAREHOUSE_LAYER, filters[1])
@@ -99,11 +102,27 @@ const buildFilters = function (selectedIds) {
   return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]]
 }
 
+const setHoverState = function (map, id) {
+  if (window.app.currentHover) {
+    map.setFeatureState({ source: 'incidents', id: window.app.currentHover }, { hover: false })
+  }
+  if (id) {
+    map.setFeatureState({ source: 'incidents', id: id }, { hover: true })
+    window.app.currentHover = id
+  }
+}
+
+const hideInfo = function() {
+  let defaultInfo = document.getElementById('defaultInfo')
+  defaultInfo.classList.remove('hide')
+  let content = document.getElementById('innerInfobox')
+  content.classList.add('hide')
+}
 const setPopups = (map) => {
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: true
-  })
+  // const popup = new mapboxgl.Popup({
+  //   closeButton: false,
+  //   closeOnClick: true
+  // })
   const showPopup = function (e) {
     e.originalEvent.preventDefault()
     // Change the cursor style as a UI indicator.
@@ -111,28 +130,15 @@ const setPopups = (map) => {
 
     // pick most prominent feature from under the cursor
     let feature = e.features[0].properties
-    let anchor = {}
-
-    const mapW = document.getElementById('map').clientWidth
-    const mapH = document.getElementById('map').clientHeight
-    if (window.app.screenSize === 'xs') {
-      anchor.options.maxWidth = 150
-    }
-    anchor = {
-      x: e.point.x > mapW / 2 ? 'right' : 'left',
-      y: e.point.y < mapH / 3 ? 'top-' : (e.point.y > 2 * mapH / 3 ? 'bottom-' : '')
-    }
-    popup.options.anchor = anchor.y + anchor.x
-
-    // Populate the popup and set its coordinates
-    // based on the feature found.
-    popup.setLngLat(e.lngLat)
-      .setHTML(tooltipBody(feature))
-      .addTo(map)
+    setHoverState(map, e.features[0].id)
+    tooltipBody(feature)
+    let defaultInfo = document.getElementById('defaultInfo')
+    defaultInfo.classList.add('hide')
+    let content = document.getElementById('innerInfobox')
+    content.classList.remove('hide')
   }
   const hidePopup = function (e) {
     map.getCanvas().style.cursor = ''
-    popup.remove()
   }
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
@@ -142,7 +148,7 @@ const setPopups = (map) => {
   map.on('mouseleave', WAREHOUSE_LAYER, hidePopup)
   map.on('click', WAREHOUSE_LAYER, showPopup)
 
- document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {
@@ -164,27 +170,23 @@ const formatProperty = function (key, value) {
 }
 
 const tooltipBody = function (feature) {
-  let content = document.createElement('div')
-  content.classList.add('tooltip-body')
-
+  let content = document.getElementById('innerInfobox')
+  content.innerHTML = ''
   let h = document.createElement('h3')
-  h.innerHTML = feature.id
+  h.innerHTML = '<span class="indicator"></span>' + feature.id
 
   let sub = document.createElement('h5')
   sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip
   content.appendChild(h)
   content.appendChild(sub)
-  content.appendChild(formatProperty('Uses robots',
-    boolToString(feature.robots)))
 
   if (feature.valid === 1) {
     let deets = document.createElement('div')
     deets.classList.add('details')
+    deets.appendChild(formatProperty('Uses robots',
+      boolToString(feature.robots)))
     deets.appendChild(formatProperty('Injuries reported', feature.injuryCount))
-    // deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount))
-    deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'))
-    deets.appendChild(compareChart(toPrecision(feature.trir), META.trir))
-    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'))
+    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + '(' + toPrecision(feature.diffDart) + 'x industry average'))
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart))
     content.appendChild(deets)
   } else {

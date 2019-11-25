@@ -9688,8 +9688,17 @@ var closeAllLists = function closeAllLists(elmnt) {
 };
 
 var selectionHandler = function selectionHandler(e) {
-  _state.query = e.target.innerText;
-  setValueInInput(e.target.innerText);
+  // debugger
+  e.preventDefault();
+  e.stopPropagation();
+  var target = e.target;
+
+  if (e.target.classList.contains('highlight')) {
+    target = e.target.parentElement;
+  }
+
+  _state.query = target.innerText;
+  setValueInInput(target.innerText);
   closeAllLists(); // selection made event
 
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
@@ -10703,7 +10712,8 @@ __webpack_require__.r(__webpack_exports__);
 (function () {
   var app = {
     searchQuery: '',
-    smallScreen: true
+    smallScreen: true,
+    currHover: 1
   };
 
   app.hideScrollndicator = function () {
@@ -10779,8 +10789,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var _map = {}; // const AMAZON_ORANGE = '#f38d20'
-
+var _map = {};
+var AMAZON_ORANGE = '#f38d20';
 var DEFAULT_GREY = '#666';
 var TOKEN = 'pk.eyJ1IjoiY2lyIiwiYSI6ImNqdnUyazF3ODE3a2EzeW1hZ2s5NHh3MG8ifQ.CDzm3odssJ7uOLPGrapc5Q'; // TODO: replace with new one
 
@@ -10820,8 +10830,8 @@ _map.init = function () {
         'paint': {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 15],
           'circle-color': createStyle(),
-          'circle-stroke-color': DEFAULT_GREY,
-          'circle-stroke-width': 1,
+          'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false], AMAZON_ORANGE, DEFAULT_GREY],
+          'circle-stroke-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 1],
           'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0.4]
         },
         'filter': ['==', 'valid', 1]
@@ -10833,8 +10843,8 @@ _map.init = function () {
         'paint': {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 10, 7],
           'circle-color': 'rgba(0,0,0,0.3)',
-          'circle-stroke-color': DEFAULT_GREY,
-          'circle-stroke-width': 0.5
+          'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false], AMAZON_ORANGE, DEFAULT_GREY],
+          'circle-stroke-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 0.5]
         },
         'filter': ['all', ['==', 'valid', 0]]
       }, WAREHOUSE_LAYER);
@@ -10850,6 +10860,8 @@ _map.init = function () {
 };
 
 _map.setFilters = function (selectedIds) {
+  setHoverState(this.map, null);
+  hideInfo();
   var filters = buildFilters(selectedIds);
   this.map.setFilter(UNKNOWNS_LAYER, filters[0]);
   this.map.setFilter(WAREHOUSE_LAYER, filters[1]);
@@ -10884,39 +10896,55 @@ var buildFilters = function buildFilters(selectedIds) {
   return [['all', UNKNOWNS_FILTER, clause], ['all', WAREHOUSE_FILTER, clause]];
 };
 
-var setPopups = function setPopups(map) {
-  var popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: true
-  });
+var setHoverState = function setHoverState(map, id) {
+  if (window.app.currentHover) {
+    map.setFeatureState({
+      source: 'incidents',
+      id: window.app.currentHover
+    }, {
+      hover: false
+    });
+  }
 
+  if (id) {
+    map.setFeatureState({
+      source: 'incidents',
+      id: id
+    }, {
+      hover: true
+    });
+    window.app.currentHover = id;
+  }
+};
+
+var hideInfo = function hideInfo() {
+  var defaultInfo = document.getElementById('defaultInfo');
+  defaultInfo.classList.remove('hide');
+  var content = document.getElementById('innerInfobox');
+  content.classList.add('hide');
+};
+
+var setPopups = function setPopups(map) {
+  // const popup = new mapboxgl.Popup({
+  //   closeButton: false,
+  //   closeOnClick: true
+  // })
   var showPopup = function showPopup(e) {
     e.originalEvent.preventDefault(); // Change the cursor style as a UI indicator.
 
     map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
 
     var feature = e.features[0].properties;
-    var anchor = {};
-    var mapW = document.getElementById('map').clientWidth;
-    var mapH = document.getElementById('map').clientHeight;
-
-    if (window.app.screenSize === 'xs') {
-      anchor.options.maxWidth = 150;
-    }
-
-    anchor = {
-      x: e.point.x > mapW / 2 ? 'right' : 'left',
-      y: e.point.y < mapH / 3 ? 'top-' : e.point.y > 2 * mapH / 3 ? 'bottom-' : ''
-    };
-    popup.options.anchor = anchor.y + anchor.x; // Populate the popup and set its coordinates
-    // based on the feature found.
-
-    popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
+    setHoverState(map, e.features[0].id);
+    tooltipBody(feature);
+    var defaultInfo = document.getElementById('defaultInfo');
+    defaultInfo.classList.add('hide');
+    var content = document.getElementById('innerInfobox');
+    content.classList.remove('hide');
   };
 
   var hidePopup = function hidePopup(e) {
     map.getCanvas().style.cursor = '';
-    popup.remove();
   };
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
@@ -10947,24 +10975,21 @@ var formatProperty = function formatProperty(key, value) {
 };
 
 var tooltipBody = function tooltipBody(feature) {
-  var content = document.createElement('div');
-  content.classList.add('tooltip-body');
+  var content = document.getElementById('innerInfobox');
+  content.innerHTML = '';
   var h = document.createElement('h3');
-  h.innerHTML = feature.id;
+  h.innerHTML = '<span class="indicator"></span>' + feature.id;
   var sub = document.createElement('h5');
   sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip;
   content.appendChild(h);
   content.appendChild(sub);
-  content.appendChild(formatProperty('Uses robots', boolToString(feature.robots)));
 
   if (feature.valid === 1) {
     var deets = document.createElement('div');
     deets.classList.add('details');
-    deets.appendChild(formatProperty('Injuries reported', feature.injuryCount)); // deets.appendChild(formatProperty('Serious injuries reported', feature.seriousCount))
-
-    deets.appendChild(formatProperty('Total injury rates', toPrecision(feature.trir) + ' (' + toPrecision(feature.diffTrir) + 'x industry average)'));
-    deets.appendChild(compareChart(toPrecision(feature.trir), META.trir));
-    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + ' (' + toPrecision(feature.diffDart) + 'x industry average)'));
+    deets.appendChild(formatProperty('Uses robots', boolToString(feature.robots)));
+    deets.appendChild(formatProperty('Injuries reported', feature.injuryCount));
+    deets.appendChild(formatProperty('Serious injury rates', toPrecision(feature.dart) + '(' + toPrecision(feature.diffDart) + 'x industry average'));
     deets.appendChild(compareChart(toPrecision(feature.dart), META.dart));
     content.appendChild(deets);
   } else {

@@ -65,8 +65,15 @@ const closeAllLists = function (elmnt) {
 }
 
 const selectionHandler = function (e) {
-  _state.query = e.target.innerText
-  setValueInInput(e.target.innerText)
+  // debugger
+  e.preventDefault()
+  e.stopPropagation()
+  let target = e.target
+  if (e.target.classList.contains('highlight')) {
+    target = e.target.parentElement
+  }
+  _state.query = target.innerText
+  setValueInInput(target.innerText)
   closeAllLists()
   // selection made event
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:

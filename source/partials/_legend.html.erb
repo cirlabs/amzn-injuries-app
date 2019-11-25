@@ -1,0 +1,13 @@
+<div id="maplegend">
+  <div class="line">
+    <p>Total Recordable Incident Rate(TRIR): </p>
+    <div class="scales">
+      <span>0</span>
+      <% [*1..10].each do |i| %>
+      <span class='dot <%="bg-cat-#{i}"%>' ></span>
+      <% end %>
+      <span>27</span>
+    </div>
+  </div>
+  <div class="line">Warehouse with no data: <span class="dot default-bg"></span> </div>
+</div>
