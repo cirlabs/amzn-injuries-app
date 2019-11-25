@@ -10920,6 +10920,8 @@ var setPopups = function setPopups(map) {
   };
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
+  map.on('click', UNKNOWNS_LAYER, showPopup);
+  map.on('click', WAREHOUSE_LAYER, showPopup);
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
