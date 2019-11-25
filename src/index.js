@@ -5,8 +5,9 @@ import 'core-js'
 import fontLoader from 'font'
 import map from 'map'
 import table from 'table'
-
+import 'custom-event-polyfill'
 import autocomplete from 'autocomplete'
+
 
 (function () {
   let app = {

@@ -8850,6 +8850,70 @@ $export($export.G + $export.B + $export.F * MSIE, {
 
 /***/ }),
 
+/***/ "./node_modules/custom-event-polyfill/polyfill.js":
+/*!********************************************************!*\
+  !*** ./node_modules/custom-event-polyfill/polyfill.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Polyfill for creating CustomEvents on IE9/10/11
+
+// code pulled from:
+// https://github.com/d4tocchini/customevent-polyfill
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent#Polyfill
+
+(function() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    var ce = new window.CustomEvent('test', { cancelable: true });
+    ce.preventDefault();
+    if (ce.defaultPrevented !== true) {
+      // IE has problems with .preventDefault() on custom events
+      // http://stackoverflow.com/questions/23349191
+      throw new Error('Could not prevent default');
+    }
+  } catch (e) {
+    var CustomEvent = function(event, params) {
+      var evt, origPrevent;
+      params = params || {};
+      params.bubbles = !!params.bubbles;
+      params.cancelable = !!params.cancelable;
+
+      evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(
+        event,
+        params.bubbles,
+        params.cancelable,
+        params.detail
+      );
+      origPrevent = evt.preventDefault;
+      evt.preventDefault = function() {
+        origPrevent.call(this);
+        try {
+          Object.defineProperty(this, 'defaultPrevented', {
+            get: function() {
+              return true;
+            }
+          });
+        } catch (e) {
+          this.defaultPrevented = true;
+        }
+      };
+      return evt;
+    };
+
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent; // expose definition to window
+  }
+})();
+
+
+/***/ }),
+
 /***/ "./node_modules/normalize-css/normalize.css":
 /*!**************************************************!*\
   !*** ./node_modules/normalize-css/normalize.css ***!
@@ -10404,7 +10468,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var font__WEBPACK_IMPORTED_MODULE_150__ = __webpack_require__(/*! font */ "./src/font.js");
 /* harmony import */ var map__WEBPACK_IMPORTED_MODULE_151__ = __webpack_require__(/*! map */ "./src/map.js");
 /* harmony import */ var table__WEBPACK_IMPORTED_MODULE_152__ = __webpack_require__(/*! table */ "./src/table.js");
-/* harmony import */ var autocomplete__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! autocomplete */ "./src/autocomplete.js");
+/* harmony import */ var custom_event_polyfill__WEBPACK_IMPORTED_MODULE_153__ = __webpack_require__(/*! custom-event-polyfill */ "./node_modules/custom-event-polyfill/polyfill.js");
+/* harmony import */ var custom_event_polyfill__WEBPACK_IMPORTED_MODULE_153___default = /*#__PURE__*/__webpack_require__.n(custom_event_polyfill__WEBPACK_IMPORTED_MODULE_153__);
+/* harmony import */ var autocomplete__WEBPACK_IMPORTED_MODULE_154__ = __webpack_require__(/*! autocomplete */ "./src/autocomplete.js");
+
 
 
 
@@ -10748,7 +10815,7 @@ __webpack_require__.r(__webpack_exports__);
 
   var initAutoComplete = function initAutoComplete() {
     var searchBars = document.getElementById('autocomplete');
-    autocomplete__WEBPACK_IMPORTED_MODULE_153__["default"].init(searchBars, SEARCH_TERMS, {
+    autocomplete__WEBPACK_IMPORTED_MODULE_154__["default"].init(searchBars, SEARCH_TERMS, {
       queryChangeHandler: handleSearchInput
     });
   };
