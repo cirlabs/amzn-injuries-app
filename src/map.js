@@ -133,12 +133,12 @@ const setPopups = (map) => {
   }
   const hidePopup = function () {
     map.getCanvas().style.cursor = ''
-    popup.remove()
+    //popup.remove()
   }
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
-  
+
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
