@@ -72,8 +72,8 @@ const selectionHandler = function (e) {
   if (e.target.classList.contains('highlight')) {
     target = e.target.parentElement
   }
-  _state.query = target.innerText
-  setValueInInput(target.innerText)
+  _state.query = target.innerText.trim()
+  setValueInInput(target.innerText.trim())
   closeAllLists()
   // selection made event
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', { detail:
@@ -124,7 +124,7 @@ const addItemsToList = function (matches, val = null) {
   if (totalMatchesCount === 0) {
     const noRes = document.createElement('div')
     noRes.innerHTML = 'No matching Amazon warehouse found.'
-    noRes.classList = 'notfound'
+    noRes.classList.add('notfound')
     div.appendChild(noRes)
     // notify about invalid query
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged',

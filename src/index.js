@@ -8,7 +8,6 @@ import table from 'table'
 import 'custom-event-polyfill'
 import autocomplete from 'autocomplete'
 
-
 (function () {
   let app = {
     searchQuery: '',

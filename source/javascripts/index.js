@@ -9761,8 +9761,8 @@ var selectionHandler = function selectionHandler(e) {
     target = e.target.parentElement;
   }
 
-  _state.query = target.innerText;
-  setValueInInput(target.innerText);
+  _state.query = target.innerText.trim();
+  setValueInInput(target.innerText.trim());
   closeAllLists(); // selection made event
 
   _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
@@ -9852,7 +9852,7 @@ var addItemsToList = function addItemsToList(matches) {
   if (totalMatchesCount === 0) {
     var noRes = document.createElement('div');
     noRes.innerHTML = 'No matching Amazon warehouse found.';
-    noRes.classList = 'notfound';
+    noRes.classList.add('notfound');
     div.appendChild(noRes); // notify about invalid query
 
     _state.inputEl.dispatchEvent(new window.CustomEvent('queryChanged', {
