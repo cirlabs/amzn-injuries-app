@@ -10891,8 +10891,9 @@ var setPopups = function setPopups(map) {
   });
 
   var showPopup = function showPopup(e) {
-    e.originalEvent.stopPropagation();
-    e.originalEvent.preventDefault(); // Change the cursor style as a UI indicator.
+    // e.originalEvent.stopPropagation()
+    // e.originalEvent.preventDefault()
+    document.getElementById('debuginfo').innerHTML += e.type + ' '; // Change the cursor style as a UI indicator.
 
     map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
 

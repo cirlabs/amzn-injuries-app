@@ -105,8 +105,9 @@ const setPopups = (map) => {
     closeOnClick: true
   })
   const showPopup = function (e) {
-    e.originalEvent.stopPropagation()
-    e.originalEvent.preventDefault()
+    // e.originalEvent.stopPropagation()
+    // e.originalEvent.preventDefault()
+    document.getElementById('debuginfo').innerHTML += e.type + ' '
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer'
 
