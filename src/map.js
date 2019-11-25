@@ -40,7 +40,7 @@ _map.init = () => {
         'type': 'circle',
         'source': 'incidents',
         'paint': {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 10],
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 15],
           'circle-color': createStyle(),
           'circle-stroke-color': DEFAULT_GREY,
           'circle-stroke-width': 1,
@@ -105,9 +105,7 @@ const setPopups = (map) => {
     closeOnClick: true
   })
   const showPopup = function (e) {
-    // e.originalEvent.stopPropagation()
-    // e.originalEvent.preventDefault()
-    document.getElementById('debuginfo').innerHTML += e.type + ' '
+    e.originalEvent.preventDefault()
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = 'pointer'
 
@@ -132,17 +130,20 @@ const setPopups = (map) => {
       .setHTML(tooltipBody(feature))
       .addTo(map)
   }
-  const hidePopup = function () {
+  const hidePopup = function (e) {
+    e.originalEvent.stopPropagation()
     map.getCanvas().style.cursor = ''
-    //popup.remove()
+    popup.remove()
   }
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup)
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup)
   map.on('click', UNKNOWNS_LAYER, showPopup)
-  map.on('click', WAREHOUSE_LAYER, showPopup)
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup)
+  map.on('mouseleave', WAREHOUSE_LAYER, hidePopup)
+  map.on('click', WAREHOUSE_LAYER, showPopup)
 
-  document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
+ document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup)
 }
 
 const toPrecision = function (num) {

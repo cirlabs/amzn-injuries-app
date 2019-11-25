@@ -10818,7 +10818,7 @@ _map.init = function () {
         'type': 'circle',
         'source': 'incidents',
         'paint': {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 10],
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 10, 15],
           'circle-color': createStyle(),
           'circle-stroke-color': DEFAULT_GREY,
           'circle-stroke-width': 1,
@@ -10891,9 +10891,7 @@ var setPopups = function setPopups(map) {
   });
 
   var showPopup = function showPopup(e) {
-    // e.originalEvent.stopPropagation()
-    // e.originalEvent.preventDefault()
-    document.getElementById('debuginfo').innerHTML += e.type + ' '; // Change the cursor style as a UI indicator.
+    e.originalEvent.preventDefault(); // Change the cursor style as a UI indicator.
 
     map.getCanvas().style.cursor = 'pointer'; // pick most prominent feature from under the cursor
 
@@ -10916,14 +10914,18 @@ var setPopups = function setPopups(map) {
     popup.setLngLat(e.lngLat).setHTML(tooltipBody(feature)).addTo(map);
   };
 
-  var hidePopup = function hidePopup() {
-    map.getCanvas().style.cursor = ''; //popup.remove()
+  var hidePopup = function hidePopup(e) {
+    e.originalEvent.stopPropagation();
+    map.getCanvas().style.cursor = '';
+    popup.remove();
   };
 
   map.on('mouseenter', UNKNOWNS_LAYER, showPopup);
+  map.on('mouseleave', UNKNOWNS_LAYER, hidePopup);
   map.on('click', UNKNOWNS_LAYER, showPopup);
-  map.on('click', WAREHOUSE_LAYER, showPopup);
   map.on('mouseenter', WAREHOUSE_LAYER, showPopup);
+  map.on('mouseleave', WAREHOUSE_LAYER, hidePopup);
+  map.on('click', WAREHOUSE_LAYER, showPopup);
   document.getElementById('mapHolder').addEventListener('mouseleave', hidePopup);
 };
 
