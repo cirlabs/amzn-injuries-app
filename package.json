@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/kavyasukumar/cir-amazon-fulfillment.git",
-  "author": "Kavya Sukumar <kavya.sukumar@gmail.com>",
+  "author": "Kavya Sukumar <kavya.sukumar@gmail.com>, Annabel Church",
   "license": "MIT",
   "private": true,
   "scripts": {
