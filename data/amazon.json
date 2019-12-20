@@ -541,7 +541,7 @@
    },
    "DEN3": {
       "Robots": "TRUE",
-      "City": "Broomfield",
+      "City": "Thornton",
       "State": "CO",
       "Zip Code": 80023,
       "Latitude": 39.960868,
@@ -1156,7 +1156,7 @@
    },
    "LGB3": {
       "Robots": "TRUE",
-      "City": "Riverside",
+      "City": "Eastvale",
       "State": "CA",
       "Zip Code": 92505,
       "Latitude": 33.999548,
@@ -1326,12 +1326,12 @@
       "Zip Code": 60449,
       "Latitude": 41.426686,
       "Longitude": -87.771217,
-      "Number of Injuries for 2018": "UNKNOWN",
-      "Number of Serious Injuries for 2018": "UNKNOWN",
-      "Total Injury Rate for 2018": "UNKNOWN",
-      "(Injury Rate)(5.2, Industry Injury Rate)": "UNKNOWN",
-      "Serious Injury Rate for 2018": "UNKNOWN",
-      "(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)": "UNKNOWN",
+      "Number of Injuries for 2018": "235",
+      "Number of Serious Injuries for 2018": "208",
+      "Total Injury Rate for 2018": "10.38779174",
+      "(Injury Rate)(5.2, Industry Injury Rate)": "1.997652258",
+      "Serious Injury Rate for 2018": "9.194300771",
+      "(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)": "2.298575193",
       "Source(s) for Locations": "Avalara, MWPVL"
    },
    "MDW8": {
