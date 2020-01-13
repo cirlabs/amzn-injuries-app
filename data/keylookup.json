@@ -2,7 +2,7 @@
   "robots": "Robots",
   "city": "City",
   "state": "State",
-  "zip": "Zip Code",
+  "zipcode": "Zip Code",
   "lat": "Latitude",
   "lng": "Longitude",
   "injuryCount": "Number of Injuries for 2018",
