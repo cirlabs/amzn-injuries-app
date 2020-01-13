@@ -41,7 +41,7 @@ def fix_keys(obj)
   obj.map do |k,v|
     key = @reverse_key_lookup[k]
     val = fix_val(v)
-    if key == 'zip'
+    if key == 'zipcode'
       val = val.to_s
       val = '0' + val if val.length < 5
     end

@@ -37,7 +37,7 @@ helpers do
       .map { |k, v| [data.states[k], v.map { |x| x.properties.id }] }.to_h
 
     zip_group = data.incidents.features
-      .group_by { |d| d.properties['zip'] }
+      .group_by { |d| d.properties.zipcode }
       .map { |k, v| [k, v.map { |x| x.properties.id }] }.to_h
 
     city_group = data.incidents.features
