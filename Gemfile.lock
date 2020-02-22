@@ -30,6 +30,8 @@ GEM
     fast_blank (1.0.0)
     fastimage (2.1.7)
     ffi (1.11.3)
+    ffi (1.11.3-java)
+    ffi (1.11.3-x86-mingw32)
     foreman (0.86.0)
     haml (5.1.2)
       temple (>= 0.8.0)
@@ -40,6 +42,7 @@ GEM
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     json (2.3.0)
+    json (2.3.0-java)
     kramdown (1.17.0)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -91,6 +94,10 @@ GEM
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    pry (0.12.2-java)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+      spoon (~> 0.0)
     public_suffix (4.0.2)
     rack (2.0.8)
     rb-fsevent (0.10.3)
@@ -98,18 +105,29 @@ GEM
       ffi (~> 1.0)
     sassc (2.2.1)
       ffi (~> 1.9)
+    sassc (2.2.1-x86-mingw32)
+      ffi (~> 1.9)
     servolux (0.13.0)
+    spoon (0.0.6)
+      ffi
     temple (0.8.2)
     thor (1.0.1)
     thread_safe (0.3.6)
+    thread_safe (0.3.6-java)
     tilt (2.0.10)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2019.3)
+      tzinfo (>= 1.0.0)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    wdm (0.1.1)
 
 PLATFORMS
+  java
   ruby
+  x86-mingw32
+  x86-mswin32
 
 DEPENDENCIES
   foreman
