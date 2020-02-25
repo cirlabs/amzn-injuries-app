@@ -436,18 +436,18 @@
   },
   "CMH1": {
     "Robots": "TRUE",
-    "City": "Pataskala",
+    "City": "Columbus",
     "State": "OH",
     "Zip Code": 43062,
     "Latitude": 39.956792,
     "Longitude": -82.709619,
-    "Number of Injuries for 2018": "UNKNOWN",
-    "Number of Serious Injuries for 2018": "UNKNOWN",
-    "Total Injury Rate for 2018": "UNKNOWN",
-    "(Injury Rate)(5.2, Industry Injury Rate)": "UNKNOWN",
-    "Serious Injury Rate for 2018": "UNKNOWN",
-    "(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)": "UNKNOWN",
-    "Source(s) for Locations": "Avalara, MWPVL"
+    "Number of Injuries for 2018": 220,
+    "Number of Serious Injuries for 2018": 186,
+    "Total Injury Rate for 2018": 6.886673988,
+    "(Injury Rate)(5.2, Industry Injury Rate)": 1.324360382,
+    "Serious Injury Rate for 2018": 5.822369827,
+    "(Serious Injury Rate)(4, Industry Serious Injury Rate for 2018)": 1.455592457,
+    "Source(s) for Locations": "Avalara, MWPVL, OSHA"
   },
   "CMH2": {
     "Robots": "UNKNOWN",
