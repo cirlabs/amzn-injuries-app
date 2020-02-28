@@ -176,7 +176,7 @@ const tooltipBody = function (feature) {
   h.innerHTML = '<span class="indicator"></span>' + feature.id
 
   let sub = document.createElement('h5')
-  sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip
+  sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zipcode
   content.appendChild(h)
   content.appendChild(sub)
 

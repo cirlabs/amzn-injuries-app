@@ -133,6 +133,12 @@
     return -1;
   };
 
+  var getCellByKey = function(cells, key) {
+    return [].slice.call(cells).find(function(cell) {
+      return cell.getAttribute('data-sort-column-key') === key;
+    });
+  };
+
   // Stable sort function
   // If two elements are equal under the original sort function,
   // then there relative order is reversed
@@ -224,6 +230,7 @@
 
     sortTable: function(header, update) {
       var that = this,
+          columnKey = header.getAttribute('data-sort-column-key'),
           column = header.cellIndex,
           sortFunction = caseInsensitiveSort,
           item = '',
@@ -251,8 +258,17 @@
 
       // If we force a sort method, it is not necessary to check rows
       if (!sortMethod) {
+        var cell;
         while (items.length < 3 && i < that.table.tBodies[0].rows.length) {
-          item = getInnerText(that.table.tBodies[0].rows[i].cells[column]);
+          if(columnKey) {
+            cell = getCellByKey(that.table.tBodies[0].rows[i].cells, columnKey);
+          } else {
+            cell = that.table.tBodies[0].rows[i].cells[column];
+          }
+
+          // Treat missing cells as empty cells
+          item = cell ? getInnerText(cell) : "";
+
           item = item.trim();
 
           if (item.length > 0) {
@@ -291,16 +307,23 @@
         if (that.table.tBodies[i].rows.length < 2) continue;
 
         for (j = 0; j < that.table.tBodies[i].rows.length; j++) {
+          var cell;
+
           item = that.table.tBodies[i].rows[j];
           if (item.getAttribute('data-sort-method') === 'none') {
             // keep no-sorts in separate list to be able to insert
             // them back at their original position later
             noSorts[totalRows] = item;
           } else {
+            if (columnKey) {
+              cell = getCellByKey(item.cells, columnKey);
+            } else {
+              cell = item.cells[that.col];
+            }
             // Save the index for stable sorting
             newRows.push({
               tr: item,
-              td: getInnerText(item.cells[that.col]),
+              td: cell ? getInnerText(cell) : '',
               index: totalRows
             });
           }
@@ -1117,7 +1140,7 @@ module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.6.10' };
+var core = module.exports = { version: '2.6.11' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -11047,7 +11070,7 @@ var tooltipBody = function tooltipBody(feature) {
   var h = document.createElement('h3');
   h.innerHTML = '<span class="indicator"></span>' + feature.id;
   var sub = document.createElement('h5');
-  sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zip;
+  sub.innerHTML = feature.city + ', ' + feature.state + ' &mdash; ' + feature.zipcode;
   content.appendChild(h);
   content.appendChild(sub);
 
